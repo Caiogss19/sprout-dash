@@ -1,0 +1,13 @@
+{
+  "name": "sprout-lost-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard de análise de lost e plano de retomada — Sprout Social / Spark Maxx",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

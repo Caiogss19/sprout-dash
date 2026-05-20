@@ -1,0 +1,3726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprout · Perfil dos Lost 2026 · Growth Ops Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #FAF8F3;
+    --bg-paper: #FFFFFF;
+    --bg-soft: #F2EFE7;
+    --ink: #1A1814;
+    --ink-mute: #6B6863;
+    --ink-faint: #A09D96;
+    --rule: #E5E1D5;
+    --rule-strong: #C9C4B5;
+    --crimson: #A8321F;
+    --crimson-soft: #F5E4DF;
+    --amber: #B8722D;
+    --amber-soft: #F5E9D8;
+    --olive: #5C6B3F;
+    --olive-soft: #E5E8D7;
+    --navy: #1F3A5F;
+    --navy-soft: #DDE4EE;
+    --plum: #6B3651;
+    --plum-soft: #EFE0E8;
+    --wpp-bg: #E5DDD5;
+    --wpp-header: #075E54;
+    --wpp-sent: #DCF8C6;
+    --wpp-meta: #6B6863;
+    --wpp-btn-bg: #FFFFFF;
+    --wpp-btn-border: #E0E0E0;
+    --wpp-btn-text: #075E54;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F0E0C;
+    --bg-paper: #1A1815;
+    --bg-soft: #25221E;
+    --ink: #F5F2EB;
+    --ink-mute: #9B9690;
+    --ink-faint: #6B6863;
+    --rule: #2C2925;
+    --rule-strong: #3D3A35;
+    --crimson: #E08369;
+    --crimson-soft: #3A1E18;
+    --amber: #D49555;
+    --amber-soft: #3D2A14;
+    --olive: #A8B782;
+    --olive-soft: #232814;
+    --navy: #7CA5DA;
+    --navy-soft: #142339;
+    --plum: #BD8AA8;
+    --plum-soft: #321F2A;
+    --wpp-bg: #0B141A;
+    --wpp-header: #1F2C33;
+    --wpp-sent: #005C4B;
+    --wpp-meta: #B4B4B4;
+    --wpp-btn-bg: #1F2C33;
+    --wpp-btn-border: #2A3942;
+    --wpp-btn-text: #00A884;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  html { color-scheme: light dark; }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s ease;
+  }
+  .theme-toggle:hover { border-color: var(--rule-strong); }
+  .theme-toggle-opt {
+    background: transparent;
+    border: 0;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+  }
+  .theme-toggle-opt.active {
+    background: var(--bg-paper);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .theme-icon { font-size: 11px; line-height: 1; }
+
+  /* WHATSAPP MOCKUP */
+  .wpp-mockup {
+    background: var(--wpp-bg);
+    border-radius: 16px;
+    max-width: 380px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 0 0 1px var(--rule);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+  :root[data-theme="dark"] .wpp-mockup { box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px var(--rule); }
+  .wpp-header {
+    background: var(--wpp-header);
+    color: #FFFFFF;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .wpp-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #25D366;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 16px;
+    font-style: italic;
+    flex-shrink: 0;
+  }
+  .wpp-header-info { flex: 1; min-width: 0; }
+  .wpp-header-name { font-weight: 500; font-size: 14px; line-height: 1.2; color: #FFFFFF; }
+  .wpp-header-status { font-size: 11px; color: #FFFFFF; opacity: 0.75; margin-top: 2px; }
+  .wpp-chat {
+    padding: 14px 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 100px;
+    background-image:
+      radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+  :root[data-theme="dark"] .wpp-chat {
+    background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  }
+  .wpp-day-tag {
+    align-self: center;
+    background: rgba(255,255,255,0.85);
+    color: #495057;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin: 8px 0 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  :root[data-theme="dark"] .wpp-day-tag {
+    background: rgba(255,255,255,0.05);
+    color: #B4B4B4;
+  }
+  .wpp-bubble {
+    background: var(--wpp-sent);
+    padding: 7px 10px 5px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 78%;
+    align-self: flex-end;
+    margin-bottom: 1px;
+    color: #1A1814;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+    position: relative;
+    word-wrap: break-word;
+  }
+  :root[data-theme="dark"] .wpp-bubble { color: #E9EDEF; }
+  .wpp-bubble-meta {
+    font-size: 10px;
+    color: var(--wpp-meta);
+    text-align: right;
+    margin-top: 2px;
+    line-height: 1;
+  }
+  .wpp-bubble-meta .check { color: #4FC3F7; font-weight: 500; }
+  .wpp-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-width: 78%;
+    align-self: flex-end;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    background: var(--wpp-btn-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  }
+  .wpp-btn {
+    background: var(--wpp-btn-bg);
+    border: 0;
+    border-bottom: 1px solid var(--wpp-btn-border);
+    color: var(--wpp-btn-text);
+    font-size: 13px;
+    padding: 10px 14px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    font-family: inherit;
+    transition: background 0.1s;
+  }
+  .wpp-btn:last-child { border-bottom: 0; }
+  .wpp-btn:hover { filter: brightness(0.97); }
+
+  /* EMAIL MOCKUP */
+  .email-mockup {
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    max-width: 560px;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  }
+  :root[data-theme="dark"] .email-mockup { box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+  .email-header {
+    padding: 14px 20px 12px;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--rule);
+  }
+  .email-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .email-from {
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .email-from b { font-weight: 600; }
+  .email-from span { color: var(--ink-mute); margin-left: 4px; }
+  .email-subject {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .email-body {
+    padding: 24px 28px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+  }
+  .email-body p { margin-bottom: 14px; }
+  .email-body p:last-child { margin-bottom: 0; }
+  .email-cta {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--crimson);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    border-radius: 6px;
+    margin: 8px 0;
+  }
+  .email-footer {
+    border-top: 1px solid var(--rule);
+    padding: 14px 28px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* FLOW VARIATIONS TABS */
+  .flow-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-soft);
+    padding: 3px;
+    border-radius: 999px;
+    margin: 0 auto 20px;
+    max-width: 420px;
+    border: 1px solid var(--rule);
+  }
+  .flow-tab {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.15s ease;
+    font-weight: 500;
+  }
+  .flow-tab:hover { color: var(--ink); }
+  .flow-tab.active {
+    background: var(--bg-paper);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .flow-variation { display: none; }
+  .flow-variation.active { display: block; }
+
+  /* FLOW SECTION HEADER */
+  .flow-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 28px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .flow-section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .flow-section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+
+  /* SPECIAL CALLOUT (theme-aware) */
+  .callout-special {
+    background: var(--crimson-soft);
+    padding: 16px 20px;
+    border-left: 3px solid var(--crimson);
+    margin-top: 24px;
+  }
+  .callout-special-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--crimson);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .callout-special-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .callout-special-body b { font-weight: 600; color: var(--ink); }
+
+  /* TIMELINE FLOWCHART */
+  .timeline-flow {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .timeline-flow-header {
+    margin-bottom: 24px;
+  }
+  .timeline-flow-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .timeline-flow-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .timeline-flow-title em { font-style: italic; }
+  .timeline-track {
+    position: relative;
+  }
+  .timeline-track::before {
+    content: '';
+    position: absolute;
+    left: 99px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--rule-strong), var(--rule), var(--rule-strong));
+  }
+  .timeline-event {
+    position: relative;
+    display: grid;
+    grid-template-columns: 80px 40px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding-bottom: 24px;
+  }
+  .timeline-event:last-child { padding-bottom: 0; }
+  .timeline-when {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    padding-top: 6px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  .timeline-dot-wrap {
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+    position: relative;
+    z-index: 2;
+  }
+  .timeline-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--rule-strong);
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .timeline-dot.start { background: var(--ink); border-color: var(--ink); }
+  .timeline-dot.wpp { background: #25D366; border-color: #25D366; }
+  .timeline-dot.email { background: var(--navy); border-color: var(--navy); }
+  .timeline-dot.combo { background: var(--crimson); border-color: var(--crimson); }
+  .timeline-dot.decision { background: var(--amber); border-color: var(--amber); }
+  .timeline-dot.terminal { background: var(--bg); border-color: var(--ink-faint); }
+  .timeline-card {
+    background: var(--bg-soft);
+    padding: 12px 16px;
+    border-radius: 6px;
+    border-left: 3px solid var(--rule-strong);
+  }
+  .timeline-card.wpp { border-left-color: #25D366; }
+  .timeline-card.email { border-left-color: var(--navy); }
+  .timeline-card.combo { border-left-color: var(--crimson); }
+  .timeline-card.start { border-left-color: var(--ink); background: var(--bg-paper); }
+  .timeline-card.terminal { border-left-color: var(--ink-faint); background: var(--bg); border: 1px dashed var(--rule-strong); padding: 10px 14px; }
+  .timeline-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-right: 6px;
+    font-weight: 500;
+  }
+  .timeline-tag.wpp { background: rgba(37, 211, 102, 0.15); color: #128C7E; }
+  :root[data-theme="dark"] .timeline-tag.wpp { color: #4FCC8A; }
+  .timeline-tag.email { background: var(--navy-soft); color: var(--navy); }
+  .timeline-tag.combo { background: var(--crimson-soft); color: var(--crimson); }
+  .timeline-event-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .timeline-event-desc {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+  }
+  .timeline-branches {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--bg-paper);
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .timeline-branch {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 18px;
+  }
+  .timeline-branch::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .timeline-branch b { color: var(--ink); font-weight: 600; }
+  .timeline-branch-result {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* EMAIL TRAIL */
+  .email-trail {
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 24px;
+  }
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .email-trail-nav {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 6px;
+    width: 100%;
+  }
+  .email-trail-tab {
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    padding: 10px 12px;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    width: 100%;
+    min-width: 0;
+    transition: all 0.15s ease;
+  }
+  .email-trail-tab:hover {
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
+  .email-trail-tab.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .email-trail-tab-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .email-trail-tab.active .email-trail-tab-num { color: var(--crimson); }
+  .email-trail-tab-when {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .email-trail-tab-title {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .email-trail-pane { display: none; }
+  .email-trail-pane.active { display: block; }
+  .email-trail-why {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--olive);
+    padding: 14px 18px;
+    margin-top: 16px;
+    border-radius: 0 6px 6px 0;
+  }
+  .email-trail-why-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--olive);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .email-trail-why-body {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+  /* HEADER */
+  .topbar {
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 0;
+    background: var(--bg);
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 32px; height: 32px;
+    background: var(--ink);
+    color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 18px;
+    font-style: italic;
+  }
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 18px; font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-tag {
+    font-size: 11px; color: var(--ink-mute);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    border-left: 1px solid var(--rule-strong);
+    padding-left: 12px; margin-left: 12px;
+  }
+  .meta { font-size: 12px; color: var(--ink-mute); display: flex; gap: 20px; }
+  .meta b { color: var(--ink); font-weight: 500; }
+
+  /* HERO */
+  .hero {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 56px; align-items: end; }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 6vw, 76px);
+    line-height: 1.02; font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--crimson);
+  }
+  .hero-lede {
+    font-size: 16px; color: var(--ink-mute);
+    line-height: 1.6; max-width: 380px;
+    margin-top: 8px;
+  }
+  .hero-lede b { color: var(--ink); font-weight: 500; }
+  .hero-stamp {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--ink-mute); margin-bottom: 24px;
+  }
+  .hero-stamp .dot {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--crimson); margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* KPI ROW */
+  .kpis {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .kpi { padding: 0 28px; border-right: 1px solid var(--rule); }
+  .kpi:first-child { padding-left: 0; }
+  .kpi:last-child { border-right: 0; padding-right: 0; }
+  .kpi-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-mute); margin-bottom: 14px;
+  }
+  .kpi-value {
+    font-family: 'Fraunces', serif;
+    font-size: 52px; font-weight: 400;
+    line-height: 1; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-value.danger { color: var(--crimson); }
+  .kpi-value.warn { color: var(--amber); }
+  .kpi-foot {
+    font-size: 12px; color: var(--ink-mute); margin-top: 10px;
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .kpi-foot .delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    padding: 2px 6px; background: var(--bg-soft);
+    color: var(--ink);
+  }
+
+  /* SECTION */
+  section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; }
+  .section-tag {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .section-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px; color: var(--ink-faint);
+  }
+  h2.section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 38px; font-weight: 400;
+    letter-spacing: -0.02em; line-height: 1.1;
+    margin: 8px 0 12px;
+    max-width: 800px;
+  }
+  h2.section-title em { font-style: italic; color: var(--crimson); }
+  .section-lede {
+    font-size: 15px; color: var(--ink-mute);
+    max-width: 720px; line-height: 1.6;
+  }
+
+  /* CARDS */
+  .panel {
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    padding: 28px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .panel-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .panel-eyebrow {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* CHARTS */
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-wrap.tall { height: 480px; }
+  .chart-wrap.med { height: 320px; }
+  .chart-wrap.short { height: 220px; }
+
+  /* GRIDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-asym { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+
+  /* COMPACT METRIC */
+  .metric-mini {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 16px 20px;
+    background: var(--bg-soft);
+  }
+  .metric-mini-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .metric-mini-value {
+    font-family: 'Fraunces', serif;
+    font-size: 32px; line-height: 1; font-weight: 400;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-mini-foot { font-size: 12px; color: var(--ink-mute); margin-top: 4px; }
+
+  /* TABLES */
+  .table { width: 100%; border-collapse: collapse; }
+  .table th, .table td {
+    padding: 12px 0;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .table th {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-mute); font-weight: 500;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 10px;
+  }
+  .table td.num, .table th.num {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .table tr:last-child td { border-bottom: 0; }
+  .badge {
+    display: inline-block;
+    font-size: 10px; padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    background: var(--bg-soft); color: var(--ink-mute);
+  }
+  .badge.hot { background: var(--crimson-soft); color: var(--crimson); }
+  .badge.warm { background: var(--amber-soft); color: var(--amber); }
+  .badge.cool { background: var(--navy-soft); color: var(--navy); }
+
+  /* AMOSTRAS */
+  .amostras { display: flex; flex-direction: column; gap: 24px; }
+  .amostra {
+    display: grid; grid-template-columns: 280px 1fr; gap: 36px;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .amostra:first-child { border-top: 1px solid var(--ink); padding-top: 28px; }
+  .amostra-head .num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px; color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .amostra-head h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px; font-weight: 400;
+    line-height: 1.15; letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+  .amostra-stats {
+    display: flex; flex-direction: column; gap: 8px;
+    font-size: 12px;
+  }
+  .amostra-stat { display: flex; justify-content: space-between; padding: 4px 0; }
+  .amostra-stat-label { color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; }
+  .amostra-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+  /* INSIGHT CARDS */
+  .insights { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .insight { background: var(--bg-paper); padding: 28px; }
+  .insight-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 48px; line-height: 1; font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--crimson);
+    margin-bottom: 16px;
+  }
+  .insight-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px; font-weight: 500;
+    line-height: 1.2; letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .insight-body { font-size: 14px; color: var(--ink-mute); line-height: 1.6; }
+
+  /* ACTIONS */
+  .actions { display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .action {
+    background: var(--bg-paper); padding: 24px 28px;
+    display: grid; grid-template-columns: 60px 1fr 200px; gap: 24px; align-items: start;
+  }
+  .action-num {
+    font-family: 'Fraunces', serif;
+    font-size: 36px; line-height: 1; font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .action-num.p1 { color: var(--crimson); }
+  .action-num.p2 { color: var(--crimson); }
+  .action-num.p3 { color: var(--amber); }
+  .action-num.p4 { color: var(--navy); }
+  .action-title { font-weight: 500; font-size: 16px; margin-bottom: 6px; }
+  .action-body { font-size: 13px; color: var(--ink-mute); line-height: 1.6; }
+  .action-meta { font-size: 11px; color: var(--ink-mute); text-align: right; font-family: 'JetBrains Mono', monospace; }
+  .action-meta div { margin-bottom: 4px; }
+  .action-meta b { color: var(--ink); font-weight: 500; }
+
+  /* FUNIL VISUAL */
+  .funnel { display: flex; flex-direction: column; gap: 4px; }
+  .funnel-row {
+    display: grid; grid-template-columns: 240px 1fr 80px; align-items: center; gap: 16px;
+    padding: 8px 0;
+  }
+  .funnel-label { font-size: 13px; }
+  .funnel-bar-wrap { background: var(--bg-soft); height: 28px; position: relative; }
+  .funnel-bar {
+    height: 100%;
+    display: flex; align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .funnel-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  /* QUOTE / CALLOUT */
+  .callout {
+    background: #1A1814;
+    color: #FAF8F3;
+    padding: 48px 56px;
+    margin: 32px 0;
+    position: relative;
+  }
+  .callout-eyebrow {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.5); margin-bottom: 14px;
+  }
+  .callout h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 34px; font-weight: 400;
+    letter-spacing: -0.02em; line-height: 1.15;
+    margin-bottom: 16px;
+    color: #FAF8F3;
+  }
+  .callout h3 em { font-style: italic; color: #F5A26B; }
+  .callout p { font-size: 15px; color: rgba(255,255,255,0.8); max-width: 720px; line-height: 1.6; }
+
+  /* QUENTES PERDIDOS */
+  .quentes-grid { display: grid; grid-template-columns: 280px 1fr; gap: 36px; align-items: start; }
+  .quentes-headline {
+    font-family: 'Fraunces', serif;
+    font-size: 64px; font-weight: 400;
+    line-height: 1; letter-spacing: -0.02em;
+    color: var(--crimson);
+  }
+  .quentes-headline-sub {
+    font-size: 14px; color: var(--ink-mute);
+    margin-top: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0 60px;
+    border-top: 1px solid var(--ink);
+    margin-top: 40px;
+    font-size: 12px; color: var(--ink-mute);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  footer .stamp { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
+
+  /* PARTE II — RETOMADA */
+  .part-divider {
+    border-top: 4px solid var(--ink);
+    margin-top: 32px;
+    padding: 80px 0 40px;
+    text-align: center;
+  }
+  .part-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+    color: var(--ink-mute); margin-bottom: 16px;
+  }
+  .part-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 5vw, 64px); font-weight: 400;
+    letter-spacing: -0.025em; line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .part-title em { font-style: italic; color: var(--olive); }
+  .part-lede {
+    font-size: 16px; color: var(--ink-mute);
+    max-width: 640px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* PHILOSOPHY */
+  .philo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 24px; }
+  .philo-cell { background: var(--bg-paper); padding: 24px; }
+  .philo-num { font-family: 'Fraunces', serif; font-style: italic; font-size: 32px; line-height: 1; color: var(--olive); margin-bottom: 14px; font-weight: 400; }
+  .philo-title { font-weight: 500; font-size: 15px; margin-bottom: 8px; }
+  .philo-body { font-size: 13px; color: var(--ink-mute); line-height: 1.6; }
+
+  /* MATRIZ */
+  .matriz-wrap { background: var(--bg-paper); border: 1px solid var(--rule); padding: 20px; overflow-x: auto; }
+  .matriz {
+    width: 100%; min-width: 760px;
+    border-collapse: separate; border-spacing: 6px;
+  }
+  .matriz th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-mute); padding: 8px 12px; text-align: left;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 500;
+  }
+  .matriz th.col { text-align: center; }
+  .matriz td.motivo-cell {
+    background: var(--bg-soft);
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    vertical-align: middle;
+    min-width: 180px;
+  }
+  .matriz td.motivo-cell .vol {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    margin-top: 4px;
+  }
+  .matriz td.route {
+    padding: 10px 12px;
+    vertical-align: middle;
+    min-width: 160px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .matriz td.route.hot { background: var(--crimson-soft); border-left: 3px solid var(--crimson); }
+  .matriz td.route.warm { background: var(--amber-soft); border-left: 3px solid var(--amber); }
+  .matriz td.route.cold { background: var(--navy-soft); border-left: 3px solid var(--navy); }
+  .matriz td.route.skip { background: var(--bg-soft); border-left: 3px solid var(--ink-faint); color: var(--ink-mute); }
+  .route-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; padding: 1px 6px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    background: var(--bg-paper);
+    margin-bottom: 4px;
+  }
+  .route-tag.hot { color: var(--crimson); }
+  .route-tag.warm { color: var(--amber); }
+  .route-tag.cold { color: var(--navy); }
+  .route-flow {
+    font-size: 12px;
+    color: var(--ink);
+    margin: 4px 0;
+  }
+  .route-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+
+  /* GANTT */
+  .gantt {
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    padding: 24px;
+    margin-top: 28px;
+  }
+  .gantt-grid {
+    display: grid;
+    grid-template-columns: 200px repeat(8, 1fr);
+    gap: 0;
+    align-items: center;
+    font-size: 11px;
+  }
+  .gantt-head {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    text-align: center;
+  }
+  .gantt-head.label-col { text-align: left; }
+  .gantt-row { display: contents; }
+  .gantt-label {
+    padding: 12px 0;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+  }
+  .gantt-bar {
+    height: 24px;
+    margin: 8px 2px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: white;
+    font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+  }
+  .gantt-bar-wrap {
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .gantt-cell {
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid rgba(0,0,0,0.04);
+    height: 100%;
+  }
+
+  /* PHASE HERO */
+  .phase-card {
+    background: var(--bg-paper);
+    border: 1px solid var(--rule);
+    border-left: 6px solid;
+    padding: 32px;
+    margin-top: 32px;
+  }
+  .phase-card.p1 { border-left-color: var(--crimson); }
+  .phase-card.p2 { border-left-color: var(--amber); }
+  .phase-card.p3 { border-left-color: var(--olive); }
+  .phase-card.p4 { border-left-color: var(--navy); }
+  .phase-head {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 36px;
+    align-items: end;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .phase-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .phase-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .phase-title em { font-style: italic; }
+  .phase-subtitle {
+    font-size: 14px;
+    color: var(--ink-mute);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  .phase-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .phase-stat {
+    background: var(--bg-soft);
+    padding: 12px;
+  }
+  .phase-stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .phase-stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 0; }
+  .check-item {
+    display: grid;
+    grid-template-columns: 32px 1fr 180px 80px;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+  }
+  .check-item:last-child { border-bottom: 0; }
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--rule-strong);
+    background: var(--bg-paper);
+  }
+  .check-content { }
+  .check-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+  .check-body { font-size: 12px; color: var(--ink-mute); line-height: 1.5; }
+  .check-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
+  .check-meta b { color: var(--ink); font-weight: 500; }
+  .check-effort {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-align: right;
+  }
+  .effort-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--bg-soft);
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .effort-badge.low { background: var(--olive-soft); color: var(--olive); }
+  .effort-badge.med { background: var(--amber-soft); color: var(--amber); }
+  .effort-badge.high { background: var(--crimson-soft); color: var(--crimson); }
+
+  /* STACK MAP */
+  .stack-map {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 24px;
+  }
+  .stack-tool {
+    background: var(--bg-paper);
+    padding: 20px 24px;
+  }
+  .stack-tool-name {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .stack-tool-role {
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .stack-tool-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--bg-soft);
+    color: var(--ink-mute);
+    padding: 2px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+  }
+  .stack-tool-tag.new { background: var(--crimson-soft); color: var(--crimson); }
+  .stack-tool-tag.existing { background: var(--olive-soft); color: var(--olive); }
+
+  /* PENDENCIES */
+  .pend-list { display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .pend-item {
+    background: var(--bg-paper);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 40px 1fr 160px;
+    gap: 16px;
+    align-items: start;
+  }
+  .pend-num {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--crimson);
+    line-height: 1;
+    font-style: italic;
+  }
+  .pend-title { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+  .pend-body { font-size: 12px; color: var(--ink-mute); line-height: 1.5; }
+  .pend-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+  .pend-status .badge-block {
+    display: block;
+    padding: 4px 8px;
+    background: var(--bg-soft);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pend-status .badge-block.blocker { background: var(--crimson-soft); color: var(--crimson); }
+  .pend-status .badge-block.review { background: var(--amber-soft); color: var(--amber); }
+
+  /* TABS LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    padding: 32px 0 32px 0;
+    border-right: 1px solid var(--rule);
+    margin-right: 32px;
+  }
+  .sidebar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+    padding: 0 16px 12px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 12px;
+  }
+  .tab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tab-btn {
+    background: transparent;
+    border: 0;
+    border-left: 2px solid transparent;
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink-mute);
+    transition: all 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    line-height: 1.3;
+  }
+  .tab-btn:hover {
+    color: var(--ink);
+    background: var(--bg-soft);
+  }
+  .tab-btn.active {
+    border-left-color: var(--crimson);
+    color: var(--ink);
+    background: var(--bg-soft);
+  }
+  .tab-btn-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+  .tab-btn.active .tab-btn-num { color: var(--crimson); }
+  .tab-btn-title {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .tab-btn-sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .content-area { min-width: 0; }
+
+  /* EDIT MODE */
+  .edit-mode-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    padding: 8px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--ink-mute);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.15s ease;
+  }
+  .edit-mode-btn:hover {
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
+  body.editing .edit-mode-btn {
+    background: var(--crimson);
+    color: #FFFFFF;
+    border-color: var(--crimson);
+  }
+  .edit-toolbar {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1A1814;
+    color: #F5F2EB;
+    padding: 10px 14px;
+    border-radius: 999px;
+    gap: 10px;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  body.editing .edit-toolbar { display: flex; }
+  .edit-toolbar-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 8px 0 4px;
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .edit-toolbar-status::before {
+    content: '';
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #FCE5A1; box-shadow: 0 0 8px #FCE5A1;
+  }
+  .edit-toolbar-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    color: #F5F2EB;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.15s;
+  }
+  .edit-toolbar-btn:hover { background: rgba(255,255,255,0.18); }
+  .edit-toolbar-btn.primary {
+    background: var(--crimson);
+    border-color: var(--crimson);
+  }
+  .edit-toolbar-btn.primary:hover { filter: brightness(1.1); }
+
+  /* Visual indicators when editing */
+  body.editing [contenteditable="true"] {
+    border-radius: 2px;
+    transition: outline-color 0.15s, background 0.15s;
+  }
+  body.editing [contenteditable="true"]:hover {
+    outline: 1px dashed var(--crimson);
+    outline-offset: 3px;
+    cursor: text;
+  }
+  body.editing [contenteditable="true"]:focus {
+    outline: 2px solid var(--crimson);
+    outline-offset: 3px;
+    background: rgba(168, 50, 31, 0.06);
+  }
+  :root[data-theme="dark"] body.editing [contenteditable="true"]:focus {
+    background: rgba(224, 131, 105, 0.08);
+  }
+  body.editing { caret-color: var(--crimson); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-grid, .grid-2, .grid-asym, .insights, .action, .amostra, .quentes-grid {
+      grid-template-columns: 1fr;
+    }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .kpi { border-right: 0; border-bottom: 1px solid var(--rule); padding: 20px 0; }
+    .kpi:nth-child(2n) { padding-left: 20px; border-left: 1px solid var(--rule); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 44px; }
+    h2.section-title { font-size: 28px; }
+    .funnel-row { grid-template-columns: 160px 1fr 60px; }
+    .action { grid-template-columns: 1fr; }
+    .action-meta { text-align: left; }
+    .wrap { padding: 0 20px; }
+    .philo { grid-template-columns: 1fr; }
+    .phase-head { grid-template-columns: 1fr; }
+    .phase-stats { grid-template-columns: 1fr; }
+    .check-item { grid-template-columns: 1fr; gap: 8px; }
+    .stack-map { grid-template-columns: 1fr; }
+    .pend-item { grid-template-columns: 1fr; }
+    .gantt-grid { grid-template-columns: 140px repeat(8, 1fr); font-size: 9px; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      margin-right: 0;
+      padding: 12px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+      z-index: 50;
+    }
+    .sidebar-label { display: none; }
+    .tab-list { flex-direction: row; gap: 0; }
+    .tab-btn {
+      flex: 1;
+      border-left: 0;
+      border-bottom: 2px solid transparent;
+      align-items: center;
+      text-align: center;
+    }
+    .tab-btn.active {
+      border-left: 0;
+      border-bottom-color: var(--crimson);
+    }
+    .tab-btn-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <div class="brand-name">Spark Maxx · Growth Ops</div>
+      </div>
+      <div class="brand-tag">Sales analytics · Lost report</div>
+    </div>
+    <div class="meta">
+      <span>Funil <b>Sprout Social</b></span>
+      <span>Período <b>06.01 → 14.05.2026</b></span>
+      <span>Fonte <b>Pipedrive</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-label">Navegação</div>
+      <nav class="tab-list" role="tablist">
+        <button class="tab-btn active" data-target="diagnostico" role="tab" aria-selected="true">
+          <span class="tab-btn-num">Parte I</span>
+          <span class="tab-btn-title">Diagnóstico</span>
+          <span class="tab-btn-sub">Análise dos 193 lost</span>
+        </button>
+        <button class="tab-btn" data-target="plano" role="tab" aria-selected="false">
+          <span class="tab-btn-num">Parte II</span>
+          <span class="tab-btn-title">Plano de retomada</span>
+          <span class="tab-btn-sub">Funil contínuo · sprints</span>
+        </button>
+      </nav>
+      <div style="margin-top: 24px; padding: 0 16px;">
+        <div class="theme-toggle" role="group" aria-label="Alternar tema">
+          <button class="theme-toggle-opt active" data-theme="light"><span class="theme-icon">☀</span>Claro</button>
+          <button class="theme-toggle-opt" data-theme="dark"><span class="theme-icon">☾</span>Escuro</button>
+        </div>
+      </div>
+      <div style="margin-top: 12px; padding: 0 16px;">
+        <button class="edit-mode-btn" data-edit-action="toggle" aria-label="Ativar modo edição">
+          <span>✎</span> Modo edição
+        </button>
+      </div>
+    </aside>
+
+    <div class="content-area">
+
+    <div class="tab-content active" data-tab="diagnostico" role="tabpanel">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-stamp"><span class="dot"></span>Relatório executivo · v1 · maio 2026</div>
+    <div class="hero-grid">
+      <h1>193 deals fechados como <em>perdidos</em> em 4,5 meses.</h1>
+      <p class="hero-lede">
+        Win rate de <b>11,1%</b>. R$ 236k em valor identificado escorregando pelo funil — e provavelmente o dobro disso, considerando que <b>68% dos lost</b> nem chegaram a ter valor preenchido. Este documento mapeia onde, por quê e por quem.
+      </p>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Lost · YTD 2026</div>
+      <div class="kpi-value">193</div>
+      <div class="kpi-foot">de 217 deals · <span class="delta">24 ganhos</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Win rate</div>
+      <div class="kpi-value warn">11,1<span style="font-size:32px">%</span></div>
+      <div class="kpi-foot">88,9% dos deals viram lost</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Valor perdido (identificado)</div>
+      <div class="kpi-value danger">R$ 236k</div>
+      <div class="kpi-foot">apenas <span class="delta">31,6%</span> com valor preenchido</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ciclo médio até lost</div>
+      <div class="kpi-value">14<span style="font-size:32px">d</span></div>
+      <div class="kpi-foot">mediana 7d · máx 99d</div>
+    </div>
+  </div>
+
+  <!-- SECTION 01: MOTIVOS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">01 · Diagnóstico</div>
+      <div class="section-num">i</div>
+    </div>
+    <h2 class="section-title">Por que <em>perdemos</em>.</h2>
+    <p class="section-lede">5 motivos concentram 64% do volume. Os dois primeiros — No-show e Ghosting — são problemas de <b>comprometimento do lead pós-contato</b>, não de qualificação inicial. O closer está conseguindo gerar interesse, mas perdendo o lead na ponte entre interesse e fechamento.</p>
+
+    <div style="margin-top: 32px;" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Top 12 motivos de perda</div>
+        <div class="panel-eyebrow">n = 193</div>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="motivosChart" role="img" aria-label="Top 12 motivos de perda Sprout 2026"></canvas>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top: 24px;">
+      <div class="metric-mini">
+        <div class="metric-mini-label">No-show</div>
+        <div class="metric-mini-value">29</div>
+        <div class="metric-mini-foot">15,0% · 100% em VQ · 0 com valor</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Ghosting</div>
+        <div class="metric-mini-value">28</div>
+        <div class="metric-mini-foot">14,5% · R$ 94k perdidos · ciclo 36d</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Sem maturidade + Busca outro</div>
+        <div class="metric-mini-value">43</div>
+        <div class="metric-mini-foot">22,3% · mismatch de ICP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 02: FUNIL -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">02 · Distribuição</div>
+      <div class="section-num">ii</div>
+    </div>
+    <h2 class="section-title">Onde o lead <em>queima</em>.</h2>
+    <p class="section-lede">76% das perdas concentram-se em VQ + SQL. O estágio Validação Qualificação (VQ) é o ponto mais doloroso — sozinho recebe 41% dos lost. Os dois motivos predominantes nele (No-show 36% e Sem maturidade 30%) sugerem falha conjunta de pré-aquecimento entre SDR e closer, e qualificação inadequada antes do agendamento.</p>
+
+    <div style="margin-top: 32px;" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Lost por etapa do funil</div>
+        <div class="panel-eyebrow">% sobre 193</div>
+      </div>
+      <div class="funnel">
+        <div class="funnel-row">
+          <div class="funnel-label">Validação Qualificação (VQ)</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width: 100%; background: var(--crimson);">80</div></div>
+          <div class="funnel-pct">41,5%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-label">Avaliação (SQL)</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width: 80%; background: var(--amber);">64</div></div>
+          <div class="funnel-pct">33,2%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-label">Solução</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width: 52%; background: var(--plum);">42</div></div>
+          <div class="funnel-pct">21,8%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-label">Fechamento</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width: 5%; background: var(--navy);">4</div></div>
+          <div class="funnel-pct">2,1%</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-label">Negociação</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar" style="width: 4%; background: var(--navy);">3</div></div>
+          <div class="funnel-pct">1,5%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALLOUT -->
+    <div class="callout">
+      <div class="callout-eyebrow">⚠ Gargalo identificado</div>
+      <h3>A reunião VQ é o <em>buraco negro</em> do funil.</h3>
+      <p>Dos 80 lost em Validação Qualificação, 29 simplesmente não compareceram (No-show) e 24 foram reprovados na hora por falta de maturidade. Isso significa que <b>66% dos lost neste stage poderiam ter sido evitados</b> com confirmação automática 24h antes e pré-qualificação mais dura no momento do agendamento.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 03: OWNERS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">03 · Operação</div>
+      <div class="section-num">iii</div>
+    </div>
+    <h2 class="section-title">Dois closers, dois <em>perfis distintos</em>.</h2>
+    <p class="section-lede">Débora Lima (99 lost) e Leo Moreno Martins (89 lost) carregam praticamente todo o pipeline Sprout. Win rates similares (10,0% × 12,7%), mas a composição dos motivos é radicalmente diferente. Leo perde por engajamento (lead some, falta na reunião, adia). Débora perde por mismatch (lead não tem maturidade, busca outro serviço, não tem budget). Isso indica que o roteamento — não a performance — está alimentando os dois com tipos de leads diferentes.</p>
+
+    <div class="grid-asym" style="margin-top: 32px;">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Composição dos motivos por closer</div>
+          <div class="panel-eyebrow">top 6 motivos</div>
+        </div>
+        <div class="chart-wrap med">
+          <canvas id="ownersChart" role="img" aria-label="Comparação de motivos entre Débora Lima e Leo Moreno Martins"></canvas>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="panel" style="padding: 20px 24px;">
+          <div style="font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">Débora Lima</div>
+          <div style="font-family: 'Fraunces', serif; font-size: 36px; line-height: 1; font-weight: 400; letter-spacing: -0.02em;">99 <span style="font-size: 14px; color: var(--ink-mute);">lost</span></div>
+          <div style="font-size: 13px; color: var(--ink-mute); margin: 10px 0;">Win rate <b style="color:var(--ink)">10,0%</b> (11 ganhos)</div>
+          <div style="border-top: 1px solid var(--rule); padding-top: 10px; font-size: 13px; line-height: 1.7;">
+            <div>Sem maturidade <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">16%</span></div>
+            <div>Busca outro serviço <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">16%</span></div>
+            <div>Sem orçamento <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">13%</span></div>
+          </div>
+        </div>
+        <div class="panel" style="padding: 20px 24px;">
+          <div style="font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">Leo Moreno Martins</div>
+          <div style="font-family: 'Fraunces', serif; font-size: 36px; line-height: 1; font-weight: 400; letter-spacing: -0.02em;">89 <span style="font-size: 14px; color: var(--ink-mute);">lost</span></div>
+          <div style="font-size: 13px; color: var(--ink-mute); margin: 10px 0;">Win rate <b style="color:var(--ink)">12,7%</b> (13 ganhos)</div>
+          <div style="border-top: 1px solid var(--rule); padding-top: 10px; font-size: 13px; line-height: 1.7;">
+            <div>Ghosting <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">26%</span></div>
+            <div>No-show <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">19%</span></div>
+            <div>Adiou o projeto <span style="float:right; font-family: 'JetBrains Mono', monospace; color: var(--ink-mute);">16%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04: TEMPO -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">04 · Tempo</div>
+      <div class="section-num">iv</div>
+    </div>
+    <h2 class="section-title">Como o lost <em>se distribuiu</em> no ano.</h2>
+    <p class="section-lede">Pico em fevereiro (57 lost), seguido por março (52). Queda relevante a partir de abril. Pode refletir endurecimento de qualificação na entrada, redução de tráfego pago, ou simples reflexo do calendário comercial. Vale cruzar com investimento de mídia mês a mês.</p>
+
+    <div class="grid-asym" style="margin-top: 32px;">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Lost mensal · 2026</div>
+          <div class="panel-eyebrow">mai parcial</div>
+        </div>
+        <div class="chart-wrap med">
+          <canvas id="mensalChart" role="img" aria-label="Distribuição mensal dos lost Sprout em 2026"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Ciclo até lost por motivo</div>
+          <div class="panel-eyebrow">dias médios</div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr><th>Motivo</th><th class="num">Ciclo (d)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ghosting</td><td class="num">36</td></tr>
+            <tr><td>Decisor não aprovou</td><td class="num">29</td></tr>
+            <tr><td>Fechou com concorrente</td><td class="num">20</td></tr>
+            <tr><td>Adiou o projeto</td><td class="num">15</td></tr>
+            <tr><td>Sem orçamento</td><td class="num">9</td></tr>
+            <tr><td>No-show</td><td class="num">6</td></tr>
+            <tr><td>Busca outro serviço</td><td class="num">5</td></tr>
+            <tr><td>Sem maturidade</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 05: QUENTES -->
+  <section style="background: var(--crimson-soft); margin: 0 -32px; padding: 64px 32px;">
+    <div class="wrap" style="padding: 0;">
+      <div class="section-head">
+        <div class="section-tag" style="color: var(--crimson);">05 · Alerta crítico</div>
+        <div class="section-num">v</div>
+      </div>
+      <h2 class="section-title" style="color: var(--crimson);">28 leads <em style="color: var(--crimson);">"Quentes"</em> foram perdidos.</h2>
+      <p class="section-lede" style="color: var(--ink);">Estes são leads que o próprio closer marcou como Quente — alta intenção, alta probabilidade de fechamento. Ainda assim escaparam. Metade simplesmente parou de responder.</p>
+
+      <div class="quentes-grid" style="margin-top: 36px;">
+        <div>
+          <div class="quentes-headline">28<span style="font-size: 32px; color: var(--ink-mute);"> / 193</span></div>
+          <div class="quentes-headline-sub">14,5% dos lost totais eram leads quentes. Ticket somado estimado: <b>R$ 80–110k</b>.</div>
+        </div>
+        <div style="background: var(--bg-paper); padding: 24px 28px;">
+          <table class="table">
+            <thead>
+              <tr><th>Motivo da perda · quentes</th><th class="num">Qtd</th><th class="num">%</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ghosting (parou de responder) <span class="badge hot">crítico</span></td><td class="num">14</td><td class="num">50%</td></tr>
+              <tr><td>Adiou o projeto</td><td class="num">7</td><td class="num">25%</td></tr>
+              <tr><td>Fechou com concorrente</td><td class="num">3</td><td class="num">11%</td></tr>
+              <tr><td>Sem orçamento / Decisor / Outros</td><td class="num">4</td><td class="num">14%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-paper); padding: 24px 28px; margin-top: 20px;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-mute); margin-bottom: 14px;">Amostras · Quentes que viraram Ghosting (todos R$ 4.975, owner Leo Moreno)</div>
+        <table class="table">
+          <tbody>
+            <tr><td>BRINKPARK BRINQUEDOS</td><td class="num">43 dias até lost</td><td class="num">03/03</td><td><span class="badge warm">Quente · Trial</span></td></tr>
+            <tr><td>Ecossistema Sienge (Softpan/Starian)</td><td class="num">34 dias</td><td class="num">25/03</td><td><span class="badge warm">Pontualmente</span></td></tr>
+            <tr><td>Seminovos Movida</td><td class="num">53 dias</td><td class="num">17/04</td><td><span class="badge warm">Quente · Trial</span></td></tr>
+            <tr><td>Grupo Side3</td><td class="num">44 dias</td><td class="num">14/05</td><td><span class="badge warm">Quente · retomada</span></td></tr>
+            <tr><td>The Joy Lab</td><td class="num">33 dias</td><td class="num">13/05</td><td><span class="badge warm">Quente</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 06: AMOSTRAS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">06 · Casos representativos</div>
+      <div class="section-num">vi</div>
+    </div>
+    <h2 class="section-title">Amostras por <em>motivo</em>.</h2>
+    <p class="section-lede">Empresas representativas dos 5 principais motivos. Tickets entre R$ 2.700 e R$ 4.975 — faixa estreita que sugere pricing pouco diferenciado por porte de cliente. Note como os mesmos motivos aparecem em deals grandes (Binance, Unilever, Movida) e em pequenos (Mhcomm, Yolo).</p>
+
+    <div class="amostras" style="margin-top: 36px;">
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">01</div>
+          <h3>No-show</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">29 deals · 15,0%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">VQ · 100%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">6 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Com valor</span><span class="amostra-stat-value">0 deals</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th class="num">Ciclo</th><th>Owner</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Unbox</td><td class="num">30d</td><td>Leo Moreno</td><td class="num">27/02</td><td>—</td></tr>
+              <tr><td>Espada Corporation</td><td class="num">18d</td><td>Leo Moreno</td><td class="num">05/05</td><td>—</td></tr>
+              <tr><td>Thruster CC</td><td class="num">12d</td><td>Débora Lima</td><td class="num">02/02</td><td><span class="badge cool">Recorrente</span></td></tr>
+              <tr><td>Hi academia</td><td class="num">12d</td><td>Débora Lima</td><td class="num">01/04</td><td>—</td></tr>
+              <tr><td>Sobmedida</td><td class="num">11d</td><td>Leo Moreno</td><td class="num">20/02</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">02</div>
+          <h3>Ghosting<br>(parou de responder)</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">28 deals · 14,5%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">Solução · 64%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">36 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Valor perdido</span><span class="amostra-stat-value">R$ 94.222</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th class="num">Valor</th><th>Owner</th><th class="num">Ciclo</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>BRINKPARK BRINQUEDOS</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">43d</td><td><span class="badge hot">Quente, Trial</span></td></tr>
+              <tr><td>Sienge (Softpan/Starian)</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">34d</td><td><span class="badge warm">Morno</span></td></tr>
+              <tr><td>Seminovos Movida</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">53d</td><td><span class="badge hot">Quente, Trial</span></td></tr>
+              <tr><td>Grupo Side3</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">44d</td><td><span class="badge hot">Quente</span></td></tr>
+              <tr><td>The Joy Lab</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">33d</td><td><span class="badge hot">Quente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">03</div>
+          <h3>Sem maturidade<br>de mercado</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">24 deals · 12,4%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">VQ · 100%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">5 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">queima rápida</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th class="num">Valor</th><th>Owner</th><th class="num">Ciclo</th><th class="num">Lost</th></tr></thead>
+            <tbody>
+              <tr><td>Infleet</td><td class="num">—</td><td>Leo Moreno</td><td class="num">24d</td><td class="num">19/03</td></tr>
+              <tr><td>Loovi</td><td class="num">R$ 3.975</td><td>Leo Moreno</td><td class="num">13d</td><td class="num">26/02</td></tr>
+              <tr><td>Kebase Cosméticos</td><td class="num">—</td><td>Débora Lima</td><td class="num">11d</td><td class="num">03/03</td></tr>
+              <tr><td>Fix Snacks</td><td class="num">—</td><td>Leo Moreno</td><td class="num">7d</td><td class="num">22/04</td></tr>
+              <tr><td>UCD</td><td class="num">—</td><td>Leo Moreno</td><td class="num">7d</td><td class="num">20/02</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">04</div>
+          <h3>Adiou o projeto</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">24 deals · 12,4%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">SQL · 75%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">15 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Valor perdido</span><span class="amostra-stat-value">R$ 42.658</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th class="num">Valor</th><th>Owner</th><th class="num">Ciclo</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Yolo</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">6d</td><td><span class="badge cool">Trial</span></td></tr>
+              <tr><td>Gentil Negócios</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">3d</td><td><span class="badge hot">Quente</span></td></tr>
+              <tr><td>Binance</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">3d</td><td><span class="badge hot">Quente</span></td></tr>
+              <tr><td>Ei nerd</td><td class="num">R$ 4.975</td><td>Leo Moreno</td><td class="num">22d</td><td><span class="badge hot">Quente, Trial</span></td></tr>
+              <tr><td>9aocubo</td><td class="num">R$ 4.280</td><td>Débora Lima</td><td class="num">37d</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">05</div>
+          <h3>Busca outro tipo<br>de serviço</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">19 deals · 9,8%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">SQL · 53%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">5 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">mismatch ICP</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th class="num">Valor</th><th>Owner</th><th class="num">Ciclo</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Lalamove</td><td class="num">R$ 2.970</td><td>Débora Lima</td><td class="num">42d</td><td>—</td></tr>
+              <tr><td>Mhcomm</td><td class="num">R$ 2.800</td><td>Débora Lima</td><td class="num">14d</td><td><span class="badge cool">Trial</span></td></tr>
+              <tr><td>Minimal club</td><td class="num">—</td><td>Débora Lima</td><td class="num">10d</td><td><span class="badge cool">Trial</span></td></tr>
+              <tr><td>Track&amp;Field</td><td class="num">—</td><td>Leo Moreno</td><td class="num">9d</td><td>—</td></tr>
+              <tr><td>Nomad</td><td class="num">—</td><td>Débora Lima</td><td class="num">7d</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+    </div><!-- /tab-content diagnostico -->
+
+    <div class="tab-content" data-tab="plano" role="tabpanel">
+
+  <!-- ============================================ -->
+  <!-- PARTE II — PLANO DE RETOMADA DE LOST          -->
+  <!-- ============================================ -->
+
+  <div class="part-divider">
+    <div class="part-label">Parte II · Plano de retomada</div>
+    <h1 class="part-title">Funil contínuo focado nos <em>3 motivos</em> que mais doem.</h1>
+    <p class="part-lede">
+      No-show, Ghosting em Solução e Adiou somam <b>71 deals</b> (37% do lost) — e são também os 3 com maior probabilidade de recuperação. Foco total nessas 3 rotas. Sistema sempre-ligado, plugado na stack atual.
+    </p>
+  </div>
+
+  <!-- SECTION 09: PRINCÍPIOS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">09 · Princípios</div>
+      <div class="section-num">ix</div>
+    </div>
+    <h2 class="section-title">Como o funil <em>opera</em>.</h2>
+    <p class="section-lede">3 regras que valem para todos os fluxos. Cada lead respeita seu próprio relógio de retomada — sistema é idempotente, pode entrar e sair várias vezes sem intervenção manual.</p>
+
+    <div class="philo">
+      <div class="philo-cell">
+        <div class="philo-num">i</div>
+        <div class="philo-title">Cooling respeita o motivo</div>
+        <div class="philo-body">No-show pede contato em 2 horas. Ghosting em Solução pede 14 dias. Adiou pede mensagens alinhadas com a data prometida. Mensagem fora da janela queima o lead.</div>
+      </div>
+      <div class="philo-cell">
+        <div class="philo-num">ii</div>
+        <div class="philo-title">Bot abre, closer fecha</div>
+        <div class="philo-body">ManyChat faz triagem e identifica intenção. Closer original (Leo/Débora) recebe um alerta direto no Pipedrive com contexto da conversa — não começa do zero, retoma a relação anterior.</div>
+      </div>
+      <div class="philo-cell">
+        <div class="philo-num">iii</div>
+        <div class="philo-title">Reativado pula etapas</div>
+        <div class="philo-body">Lead recuperado de Ghosting em Solução volta direto pro stage Solução, não pra VQ. Lead de Adiou volta pra Solução com proposta anterior anexada. Sistema preserva o progresso.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10: MATRIZ 3 MOTIVOS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">10 · Escopo</div>
+      <div class="section-num">x</div>
+    </div>
+    <h2 class="section-title">3 motivos, 3 <em>rotas distintas</em>.</h2>
+    <p class="section-lede">Cada motivo tem seu próprio tempo de espera, sua sequência de mensagens e sua regra de transferência pro closer. Volume e recovery alvo dimensionam o impacto de cada rota.</p>
+
+    <div class="matriz-wrap" style="margin-top: 28px;">
+      <table class="matriz">
+        <thead>
+          <tr>
+            <th>Motivo · volume</th>
+            <th class="col">Cooling</th>
+            <th class="col">Cadência</th>
+            <th class="col">Handoff</th>
+            <th class="col">Recovery alvo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="motivo-cell">No-show<span class="vol">29 leads · stage VQ</span></td>
+            <td class="route hot">
+              <span class="route-tag hot">D+0 · 2h</span>
+              <div class="route-meta">imediato</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">3 mensagens em 7 dias</div>
+              <div class="route-meta">T+2h · T+24h · T+72h</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">Closer original</div>
+              <div class="route-meta">stage Reativado → VQ</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow"><b>25%</b></div>
+              <div class="route-meta">~7-8 deals/ciclo</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="motivo-cell">Ghosting em Solução<span class="vol">18 leads · R$ 73k</span></td>
+            <td class="route hot">
+              <span class="route-tag hot">D+14</span>
+              <div class="route-meta">respira o silêncio</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">3 mensagens em 90 dias</div>
+              <div class="route-meta">D+14 · D+45 · D+90</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">Closer · nova âncora</div>
+              <div class="route-meta">branch por objeção</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow"><b>15%</b></div>
+              <div class="route-meta">~3-4 deals · R$ 15k+</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="motivo-cell">Adiou o projeto<span class="vol">24 leads</span></td>
+            <td class="route hot">
+              <span class="route-tag hot">Dinâmico</span>
+              <div class="route-meta">data prometida −14d</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">4 mensagens ao redor da data</div>
+              <div class="route-meta">D-14 · D-3 · D+0 · D+7</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow">Closer · proposta anexa</div>
+              <div class="route-meta">stage Reativado → Solução</div>
+            </td>
+            <td class="route hot">
+              <div class="route-flow"><b>30%</b></div>
+              <div class="route-meta">~7-8 deals/ciclo</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-3" style="margin-top: 24px;">
+      <div class="metric-mini">
+        <div class="metric-mini-label">Volume total no escopo</div>
+        <div class="metric-mini-value">71</div>
+        <div class="metric-mini-foot">37% do lost 2026</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Recovery agregado</div>
+        <div class="metric-mini-value">~18</div>
+        <div class="metric-mini-foot">deals/ciclo · meta steady state</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Impacto no win rate</div>
+        <div class="metric-mini-value">+8pp</div>
+        <div class="metric-mini-foot">de 11,1% → ~19% projetado</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 11: NO-SHOW -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag" style="color: var(--crimson);">11 · No-show</div>
+      <div class="section-num">xi</div>
+    </div>
+
+    <div class="phase-card p1">
+      <div class="phase-head">
+        <div>
+          <div class="phase-tag" style="color: var(--crimson);">29 leads perdidos · primeira ação em 2 horas · meta de retomada 25%</div>
+          <div class="phase-title">Reagendamento em <em>24 horas</em>.</div>
+          <div class="phase-subtitle">Lead esqueceu ou teve imprevisto — não rejeitou. Janela curta é crítica: tocar no mesmo dia mantém a relevância. Closer original retoma sem cobrar.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quando ativa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Assim que o lead falta em uma reunião marcada</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quem participa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Bot no WhatsApp + Closer original (Leo ou Débora)</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Resultado esperado</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">7-8 leads voltam à reunião em até 7 dias</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="panel-eyebrow" style="margin-bottom: 12px;">Como o lead é abordado · 3 mensagens em 7 dias</div>
+      </div>
+
+            <div>
+        <div class="flow-tabs">
+          <button class="flow-tab active" data-variation="ns-v1">Versão 1 · padrão</button>
+          <button class="flow-tab" data-variation="ns-v2">Versão 2 · mais leve</button>
+          <button class="flow-tab" data-variation="ns-v3">Versão 3 · mais direta</button>
+        </div>
+
+        <div class="flow-variation active" data-variation="ns-v1">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">2 horas depois</div>
+    <div class="wpp-bubble">
+      Oi {nome}, percebi que não conseguimos conversar hoje. Tudo certo? Tenho 3 horários nessa semana — quer reagendar?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Ver horários</button>
+      <button class="wpp-btn">Agora não dá</button>
+      <button class="wpp-btn">Não tenho mais interesse</button>
+    </div>
+    <div class="wpp-day-tag">1 dia depois · se sem resposta</div>
+    <div class="wpp-bubble">
+      Vi que você se interessou em entender como o Sprout pode te ajudar com {tema_do_lead}. Separei um material rápido (3min de leitura): {link}. Faz sentido conversar?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Marcar conversa</button>
+      <button class="wpp-btn">Só receber materiais</button>
+    </div>
+    <div class="wpp-day-tag">3 dias depois · última</div>
+    <div class="wpp-bubble">
+      Última passada por aqui. Posso te tirar da lista ou prefere que eu te procure daqui 2 meses?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Marcar 15 min agora</button>
+      <button class="wpp-btn">Toca em 2 meses</button>
+      <button class="wpp-btn">Pausar contato</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="ns-v2">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">2 horas depois</div>
+    <div class="wpp-bubble">
+      {nome}, sumimos na hora da reunião 😅 Aconteceu alguma coisa? Posso te mandar 3 horários nessa semana se quiser reagendar.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Quero reagendar</button>
+      <button class="wpp-btn">Sem condições agora</button>
+    </div>
+    <div class="wpp-day-tag">1 dia depois</div>
+    <div class="wpp-bubble">
+      {nome}, separei um conteúdo super objetivo sobre como empresas como a sua estão usando o Sprout. Dá uma olhada e me diz se faz sentido a gente conversar: {link}
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Faz sentido, vamos conversar</button>
+      <button class="wpp-btn">Vou ler primeiro</button>
+    </div>
+    <div class="wpp-day-tag">3 dias depois</div>
+    <div class="wpp-bubble">
+      {nome}, não quero ser invasivo. Caso ainda faça sentido, marco uma conversa rápida agora. Senão, te procuro daqui um tempo — você decide.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Marcar agora</button>
+      <button class="wpp-btn">Pode procurar mais tarde</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="ns-v3">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">2 horas depois</div>
+    <div class="wpp-bubble">
+      Oi {nome}, vi que rolou um imprevisto na nossa conversa hoje. Quer que eu reabra a agenda pra você escolher um novo horário?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Sim, reabrir agenda</button>
+      <button class="wpp-btn">Hoje não</button>
+    </div>
+    <div class="wpp-day-tag">1 dia depois</div>
+    <div class="wpp-bubble">
+      Provavelmente o que te trouxe até a gente ainda tá incomodando. Olha esse case rápido de uma empresa com a mesma dor: {link}. Bora retomar a conversa?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Bora</button>
+      <button class="wpp-btn">Não é o momento</button>
+    </div>
+    <div class="wpp-day-tag">3 dias depois</div>
+    <div class="wpp-bubble">
+      Última mensagem por aqui, prometo 🙂. Caso tenha mudado de ideia, é só responder. Caso não, sigo no respeito e te procuro mais lá pra frente.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Quero retomar</button>
+      <button class="wpp-btn">Encerrar contato</button>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <div class="flow-section-header">
+        <div class="flow-section-title">Trilha de e-mails complementar</div>
+        <div class="flow-section-tag">4 e-mails ao longo de 30 dias · clique nas abas pra navegar</div>
+      </div>
+      <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.6; margin-bottom: 20px; max-width: 700px;">Como o lead já passou por nossa qualificação (era um SQL), ele continua recebendo conteúdo relevante mesmo se não retomar a conversa — mantém a marca aquecida e gera retomada espontânea quando o momento dele chegar.</p>
+
+      <div class="email-trail">
+<div class="email-trail-nav" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:20px;width:100%;">
+  <button class="email-trail-tab active" data-email="e1">
+    <span class="email-trail-tab-num">E1</span>
+    <span class="email-trail-tab-when">1 dia depois</span>
+    <span class="email-trail-tab-title">Reagendamento</span>
+  </button>
+  <button class="email-trail-tab" data-email="e2">
+    <span class="email-trail-tab-num">E2</span>
+    <span class="email-trail-tab-when">7 dias depois</span>
+    <span class="email-trail-tab-title">Prova social</span>
+  </button>
+  <button class="email-trail-tab" data-email="e3">
+    <span class="email-trail-tab-num">E3</span>
+    <span class="email-trail-tab-when">14 dias depois</span>
+    <span class="email-trail-tab-title">Educativo</span>
+  </button>
+  <button class="email-trail-tab" data-email="e4">
+    <span class="email-trail-tab-num">E4</span>
+    <span class="email-trail-tab-when">30 dias depois</span>
+    <span class="email-trail-tab-title">Pesquisa exclusiva</span>
+  </button>
+</div>
+<div class="email-trail-pane active" data-email="e1">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Hoje · 09:14</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Vamos remarcar nossa conversa?</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Imprevistos acontecem — vi que não conseguimos conversar no horário marcado, sem problema.</p><p>Antes de te procurar de novo, separei um material rápido sobre como empresas no seu segmento estão usando o Sprout pra {tema_do_lead}. Leitura de 3 minutos:</p>
+      <a href="#" class="email-cta">Ver case e reagendar conversa</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Primeiro contato formal após o no-show. Tom acolhedor (sem cobrar), com material útil pra reduzir fricção do reagendamento. Disparado junto com a 2ª mensagem do WhatsApp.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e2">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 1 semana do no-show</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Como a {empresa_similar} resolveu o mesmo cenário</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Tô passando por aqui pra dividir uma história que talvez te interesse.</p><p>A <b>{empresa_similar}</b> chegou pra gente exatamente no cenário que vocês descreveram: {pain_point}. Em 90 dias usando o Sprout, eles {resultado_objetivo}.</p><p>Coloquei o case completo aqui — sem floreio, só dados:</p>
+      <a href="#" class="email-cta">Ler o case da {empresa_similar}</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Sem resposta ao 1º e-mail, mudamos a abordagem. Prova social com cliente de segmento similar reativa o interesse sem precisar de pitch. Lead que era SQL provavelmente reconhece o cenário.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e3">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 2 semanas</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">3 erros que estão custando caro pra times de social</div>
+    </div>
+    <div class="email-body">
+      <p>Oi {nome},</p><p>Em conversas com mais de 200 times de social esse ano, identificamos 3 erros que aparecem repetidamente — e custam horas (e dinheiro) sem que ninguém perceba.</p><p>Compilei tudo num guia gratuito de 8 páginas. Sem pedir nada em troca:</p>
+      <a href="#" class="email-cta">Baixar guia gratuito</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Conteúdo educativo puro, sem CTA de vendas. Estabelece autoridade da Spark Maxx e mantém o lead na nossa órbita mesmo se ele ainda não estiver pronto pra retomar a conversa.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e4">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 1 mês</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Como times de social usam IA em 2026 — pesquisa Sprout</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Acabamos de fechar a pesquisa Sprout 2026 com 540 profissionais de social media no Brasil — dados sobre adoção de IA, automação, terceirização e budget.</p><p>O relatório completo é gratuito e tem números que provavelmente vão mudar como vocês pensam no plano de 2026.</p>
+      <a href="#" class="email-cta">Acessar pesquisa Sprout 2026</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Última tentativa de retomada antes de virar nurture longo. Oferta de altíssimo valor (research exclusivo) sem expectativa de resposta — fortalece percepção de autoridade e deixa porta aberta.</div>
+  </div>
+</div>
+</div>
+
+      <div style="margin-top: 24px; padding: 20px 24px; background: var(--bg-paper); border: 1px solid var(--rule);">
+        <div class="panel-eyebrow" style="margin-bottom: 14px;">Como funciona, do início ao fim</div>
+        <div style="font-size: 13px; line-height: 1.7; display: grid; grid-template-columns: 32px 1fr; gap: 8px 16px;">
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--crimson); font-size: 18px;">1</div>
+          <div><b style="font-weight: 500;">Sistema identifica o No-show.</b> Assim que o closer marca o lead como perdido com motivo "No-show", ele entra automaticamente na fila de retomada.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--crimson); font-size: 18px;">2</div>
+          <div><b style="font-weight: 500;">Espera o tempo certo.</b> O bot aguarda 2 horas — suficiente pro lead notar que perdeu, mas curto o bastante pra manter a conversa relevante.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--crimson); font-size: 18px;">3</div>
+          <div><b style="font-weight: 500;">Bot envia a primeira mensagem.</b> WhatsApp automático com nome do lead, contexto da reunião perdida e opções de horário pra reagendar.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--crimson); font-size: 18px;">4</div>
+          <div><b style="font-weight: 500;">Transfere pro closer no clique certo.</b> Quando o lead escolhe um horário, o closer original (Leo ou Débora) recebe um alerta imediato dentro do Pipedrive — com link direto pro deal e o histórico da conversa do bot anexado — e assume a conversa pelo WhatsApp.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--crimson); font-size: 18px;">5</div>
+          <div><b style="font-weight: 500;">Lead recuperado volta para o funil.</b> Após o reagendamento, o deal volta automaticamente para o funil principal marcado como "Recuperado · No-show", pronto pra próxima reunião.</div>
+        </div>
+      </div>
+
+      <div class="timeline-flow">
+        <div class="timeline-flow-header">
+          <div class="timeline-flow-eyebrow">Fluxograma do motivo · linha do tempo completa</div>
+          <div class="timeline-flow-title">Linha do tempo do <em>No-show</em></div>
+        </div>
+        <div class="timeline-track">
+      <div class="timeline-event">
+        <div class="timeline-when">Dia 0</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot start"></div></div>
+        <div class="timeline-card start">
+          <div class="timeline-event-title">Lead vira lost por No-show</div>
+          <div class="timeline-event-desc">Closer marca o lead como perdido com motivo "No-show" no Pipedrive. Sistema identifica e coloca na fila de retomada automaticamente.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">2 horas</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot wpp"></div></div>
+        <div class="timeline-card wpp">
+          <div class="timeline-event-title"><span class="timeline-tag wpp">WhatsApp</span>1ª mensagem do bot</div>
+          <div class="timeline-event-desc">"Tudo certo? Tenho 3 horários nessa semana — quer reagendar?"</div>
+          <div class="timeline-branches"><div class="timeline-branch"><b>Se clica "Ver horários"</b> → closer recebe alerta no Pipedrive e assume conversa direto pelo WhatsApp</div></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">1 dia</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot combo"></div></div>
+        <div class="timeline-card combo">
+          <div class="timeline-event-title"><span class="timeline-tag combo">WhatsApp + E-mail</span>2ª mensagem + 1º e-mail da trilha</div>
+          <div class="timeline-event-desc">Bot envia material relevante (case rápido). E-mail formal de reagendamento dispara em paralelo.</div>
+          <div class="timeline-branches"><div class="timeline-branch"><b>Se clica "Marcar conversa"</b> → closer assume conversa e propõe reagendamento</div></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">3 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot wpp"></div></div>
+        <div class="timeline-card wpp">
+          <div class="timeline-event-title"><span class="timeline-tag wpp">WhatsApp</span>3ª mensagem do bot · última tentativa direta</div>
+          <div class="timeline-event-desc">"Última passada por aqui. Posso te tirar da lista ou prefere que eu te procure daqui 2 meses?"</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">7 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>2º e-mail · prova social</div>
+          <div class="timeline-event-desc">Case detalhado de uma empresa do mesmo segmento que resolveu cenário similar com o Sprout.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">14 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>3º e-mail · conteúdo educativo</div>
+          <div class="timeline-event-desc">Guia gratuito: "3 erros que estão custando caro pra times de social". Sem CTA de venda.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">30 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>4º e-mail · pesquisa exclusiva</div>
+          <div class="timeline-event-desc">Convite para acessar pesquisa Sprout 2026 com dados de 540 profissionais do mercado.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">30+ dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot terminal"></div></div>
+        <div class="timeline-card terminal">
+          <div class="timeline-event-title">Sem resposta → vira nurture longo</div>
+          <div class="timeline-event-desc">Lead sai do fluxo ativo de retomada e entra em base de nutrição de longo prazo (e-mail bimestral via RD).</div>
+          
+        </div>
+      </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 12: GHOSTING EM SOLUÇÃO -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag" style="color: var(--amber);">12 · Ghosting em Solução</div>
+      <div class="section-num">xii</div>
+    </div>
+
+    <div class="phase-card p2">
+      <div class="phase-head">
+        <div>
+          <div class="phase-tag" style="color: var(--amber);">18 leads perdidos · R$ 73k em jogo · meta de retomada 15%</div>
+          <div class="phase-title">Break-up para <em>forçar resposta</em>.</div>
+          <div class="phase-subtitle">Lead recebeu proposta e sumiu. Maior recovery vem de mudar a âncora — não retomar a mesma proposta. Break-up letter é o gatilho: pede uma resposta única, fácil de dar.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quando ativa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Lead parou de responder após receber a proposta</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quem participa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Bot no WhatsApp + Closer original (Leo ou Débora)</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Resultado esperado</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">3-4 leads voltam à mesa · R$ 15k+ recuperados</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="panel-eyebrow" style="margin-bottom: 12px;">Como o lead é abordado · mensagem única + caminhos por resposta</div>
+      </div>
+
+            <div>
+        <div class="flow-tabs">
+          <button class="flow-tab active" data-variation="gh-v1">Versão 1 · padrão</button>
+          <button class="flow-tab" data-variation="gh-v2">Versão 2 · mais leve</button>
+          <button class="flow-tab" data-variation="gh-v3">Versão 3 · mais direta</button>
+        </div>
+
+        <div class="flow-variation active" data-variation="gh-v1">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias depois</div>
+    <div class="wpp-bubble">
+      {nome}, vou parar de te perseguir 😊. Antes, queria entender em uma linha — o que faltou na nossa proposta?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Preço</button>
+      <button class="wpp-btn">Funcionalidade</button>
+      <button class="wpp-btn">Timing</button>
+      <button class="wpp-btn">Já fechei com outro</button>
+    </div>
+    <div class="wpp-day-tag">45 dias depois · nova âncora</div>
+    <div class="wpp-bubble">
+      Trouxe um case da {empresa_similar} que pode te interessar. 3 minutos de leitura: {link}. Faz sentido voltar a conversar?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Bora retomar</button>
+      <button class="wpp-btn">Vou olhar primeiro</button>
+    </div>
+    <div class="wpp-day-tag">90 dias depois · última</div>
+    <div class="wpp-bubble">
+      Última pergunta antes de fechar nosso ciclo: ainda faz sentido pra você esse tipo de solução? Se sim, podemos retomar quando você quiser.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Ainda faz sentido</button>
+      <button class="wpp-btn">Pode encerrar</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="gh-v2">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias depois</div>
+    <div class="wpp-bubble">
+      Oi {nome}, percebo que a proposta não avançou — e tudo bem. Só queria entender em uma palavra o que travou, pra eu não te incomodar à toa.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Preço</button>
+      <button class="wpp-btn">Funcionalidade</button>
+      <button class="wpp-btn">Timing</button>
+      <button class="wpp-btn">Já fechei com outro</button>
+    </div>
+    <div class="wpp-day-tag">45 dias depois</div>
+    <div class="wpp-bubble">
+      {nome}, lembrei de você. A {empresa_similar} estava no seu mesmo cenário e usou o Sprout pra resolver. Te mando o case rápido? Talvez faça sentido a gente revisitar.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Manda o case</button>
+      <button class="wpp-btn">Não agora</button>
+    </div>
+    <div class="wpp-day-tag">90 dias depois</div>
+    <div class="wpp-bubble">
+      {nome}, antes de te dar baixa por aqui — esse tipo de solução ainda tá no seu radar? Se sim, deixo a porta aberta. Se não, sem problema.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Ainda no radar</button>
+      <button class="wpp-btn">Pode encerrar</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="gh-v3">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias depois</div>
+    <div class="wpp-bubble">
+      {nome}, vou te tirar do meu pé 🙃 mas antes me ajuda com uma coisa: o que faltou na proposta que mandei? Pode ser bem direto.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Preço</button>
+      <button class="wpp-btn">Funcionalidade</button>
+      <button class="wpp-btn">Timing</button>
+      <button class="wpp-btn">Já fechei com outro</button>
+    </div>
+    <div class="wpp-day-tag">45 dias depois</div>
+    <div class="wpp-bubble">
+      Vi que rolou um movimento interessante no seu setor: {link}. Talvez seja a hora certa de retomar nossa conversa sobre o Sprout. O que acha?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Vamos retomar</button>
+      <button class="wpp-btn">Não é o momento</button>
+    </div>
+    <div class="wpp-day-tag">90 dias depois</div>
+    <div class="wpp-bubble">
+      Acho que essa é nossa despedida 🙂. Mas se em algum momento o assunto Sprout voltar pra mesa, você sabe onde me achar.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Quero retomar</button>
+      <button class="wpp-btn">Encerrar contato</button>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <div class="callout-special">
+        <div class="callout-special-label">Cada resposta abre um caminho diferente</div>
+        <div class="callout-special-body">
+          <div><b>Preço</b> → bot pergunta: "Posso te mostrar um plano mais enxuto?" → closer abre conversa de negociação</div>
+          <div style="margin-top: 6px;"><b>Funcionalidade</b> → bot pergunta qual ponto específico → closer ajusta escopo da proposta</div>
+          <div style="margin-top: 6px;"><b>Timing</b> → bot pergunta nova data → lead vira "Adiou" e entra naquele fluxo</div>
+          <div style="margin-top: 6px;"><b>Já fechei com outro</b> → bot pergunta com quem (inteligência competitiva) → encerra retomada · vai pra nutrição longa</div>
+        </div>
+      </div>
+
+      <div class="flow-section-header">
+        <div class="flow-section-title">Trilha de e-mails complementar</div>
+        <div class="flow-section-tag">4 e-mails ao longo de 90 dias · clique nas abas pra navegar</div>
+      </div>
+      <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.6; margin-bottom: 20px; max-width: 700px;">Lead que recebeu proposta e sumiu é alto valor potencial. Trilha foca em fornecer ferramentas e conteúdo que ele pode usar pra defender a decisão internamente — calculadora, comparativo, atualizações. Nutrição em paralelo às mensagens WhatsApp.</p>
+
+      <div class="email-trail">
+<div class="email-trail-nav" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:20px;width:100%;">
+  <button class="email-trail-tab active" data-email="e1">
+    <span class="email-trail-tab-num">E1</span>
+    <span class="email-trail-tab-when">14 dias depois</span>
+    <span class="email-trail-tab-title">Nova âncora</span>
+  </button>
+  <button class="email-trail-tab" data-email="e2">
+    <span class="email-trail-tab-num">E2</span>
+    <span class="email-trail-tab-when">30 dias depois</span>
+    <span class="email-trail-tab-title">Comparativo</span>
+  </button>
+  <button class="email-trail-tab" data-email="e3">
+    <span class="email-trail-tab-num">E3</span>
+    <span class="email-trail-tab-when">60 dias depois</span>
+    <span class="email-trail-tab-title">Calculadora ROI</span>
+  </button>
+  <button class="email-trail-tab" data-email="e4">
+    <span class="email-trail-tab-num">E4</span>
+    <span class="email-trail-tab-when">90 dias depois</span>
+    <span class="email-trail-tab-title">Atualizações</span>
+  </button>
+</div>
+<div class="email-trail-pane active" data-email="e1">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Hoje · 10:00</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Um case que pode te interessar — Sprout + {empresa_similar}</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Sei que faz um tempo desde nossa última conversa sobre o Sprout. Não quero ser inconveniente — só queria compartilhar algo que pode te ser útil.</p><p>A <b>{empresa_similar}</b> estava no mesmo cenário que vocês quando nos conheceram. Usaram o Sprout pra resolver pontos parecidos com os que conversamos. O case explica em detalhes:</p>
+      <a href="#" class="email-cta">Ler o case completo</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Reforço do break-up WhatsApp por canal mais formal. Em vez de cobrar resposta sobre a proposta, mudamos a âncora — falamos de resultado de outra empresa. Reduz pressão e aumenta chance de re-engajamento.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e2">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 1 mês</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Sprout vs. principais alternativas — comparativo completo</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Quando uma proposta não avança, geralmente é porque o time tá comparando opções internamente — e tudo bem.</p><p>Pra te ajudar a defender a escolha (qualquer que seja ela) com seu time, montamos um comparativo objetivo entre o Sprout e as 3 principais plataformas do mercado. Tabela honesta, com prós e contras de cada uma.</p>
+      <a href="#" class="email-cta">Ver comparativo completo</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Hipótese: lead sumiu porque está avaliando concorrentes. Em vez de competir agressivamente, oferecemos uma comparação honesta. Ferramenta útil pra defesa interna que mostra confiança da Spark Maxx no produto.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e3">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 2 meses</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Calcule quanto seu time pode economizar com o Sprout</div>
+    </div>
+    <div class="email-body">
+      <p>Oi {nome},</p><p>Uma das objeções mais comuns que ouvimos é "ainda não consigo justificar o investimento". Faz sentido.</p><p>Pra resolver isso, criamos uma calculadora interativa que estima quanto tempo e dinheiro seu time pode economizar com o Sprout — baseada em horas gastas em tarefas manuais, ferramentas redundantes, e custo de turnover causado por sobrecarga.</p>
+      <a href="#" class="email-cta">Usar calculadora de ROI</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Argumento financeiro forte para destravar leads parados por questão de budget ou justificativa interna. Ferramenta interativa gera engajamento e dá ao lead munição concreta pra levar pro CFO ou diretoria.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e4">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 3 meses</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Atualizações do Sprout — talvez agora faça sentido</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Nos últimos 3 meses, lançamos coisas que mudam significativamente a conversa que tivemos:</p><p style="margin-left: 16px;">→ {feature_1_nova}<br>→ {feature_2_nova}<br>→ {feature_3_nova}</p><p>Se alguma dessas resolve o que travou nossa proposta, fico feliz em retomar a conversa quando quiser.</p>
+      <a href="#" class="email-cta">Quero retomar a conversa</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Última tentativa antes de fechar o ciclo de retomada. Mostra evolução real do produto que pode ter resolvido a objeção original. Tom respeitoso — "se faz sentido, retoma; se não, tudo bem".</div>
+  </div>
+</div>
+</div>
+
+      <div style="margin-top: 24px; padding: 20px 24px; background: var(--bg-paper); border: 1px solid var(--rule);">
+        <div class="panel-eyebrow" style="margin-bottom: 14px;">Como funciona, do início ao fim</div>
+        <div style="font-size: 13px; line-height: 1.7; display: grid; grid-template-columns: 32px 1fr; gap: 8px 16px;">
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--amber); font-size: 18px;">1</div>
+          <div><b style="font-weight: 500;">Sistema identifica o Ghosting.</b> Quando o closer marca o lead como perdido com motivo "Ghosting" e ele estava no estágio de Solução (proposta enviada), entra automaticamente na fila de retomada.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--amber); font-size: 18px;">2</div>
+          <div><b style="font-weight: 500;">Respeita o silêncio.</b> O bot aguarda 14 dias antes de tocar — distância suficiente pra não parecer pressão, mas curta o bastante pra a proposta ainda estar fresca.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--amber); font-size: 18px;">3</div>
+          <div><b style="font-weight: 500;">Bot faz uma pergunta única.</b> "O que faltou na nossa proposta?" — formato de break-up que força resposta, com 4 opções de clique. Lead que ignorou tudo antes responde porque é fácil.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--amber); font-size: 18px;">4</div>
+          <div><b style="font-weight: 500;">Cada resposta abre um caminho diferente.</b> Sistema identifica a objeção real e direciona pra ação certa — negociação, ajuste de escopo, novo timing ou inteligência competitiva.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--amber); font-size: 18px;">5</div>
+          <div><b style="font-weight: 500;">Closer retoma com nova âncora.</b> Em vez de reapresentar a mesma proposta, o closer entra com nova abordagem (case relevante, plano alternativo) — aumenta drasticamente a chance de fechar.</div>
+        </div>
+      </div>
+
+      <div class="timeline-flow">
+        <div class="timeline-flow-header">
+          <div class="timeline-flow-eyebrow">Fluxograma do motivo · linha do tempo completa</div>
+          <div class="timeline-flow-title">Linha do tempo do <em>Ghosting em Solução</em></div>
+        </div>
+        <div class="timeline-track">
+      <div class="timeline-event">
+        <div class="timeline-when">Dia 0</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot start"></div></div>
+        <div class="timeline-card start">
+          <div class="timeline-event-title">Lead some após receber proposta</div>
+          <div class="timeline-event-desc">Closer marca lost com motivo "Ghosting" no stage Solução. Lead já tinha demonstrado interesse e recebido a proposta. Sistema entra em modo de espera.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">14 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot combo"></div></div>
+        <div class="timeline-card combo">
+          <div class="timeline-event-title"><span class="timeline-tag combo">WhatsApp + E-mail</span>Break-up letter + 1º e-mail da trilha</div>
+          <div class="timeline-event-desc">Bot envia uma única pergunta com 4 botões. Em paralelo, e-mail formal traz case de uma empresa similar.</div>
+          <div class="timeline-branches"><div class="timeline-branch"><b>"Preço"</b> → closer abre conversa de negociação com plano alternativo</div><div class="timeline-branch"><b>"Funcionalidade"</b> → closer ajusta escopo da proposta</div><div class="timeline-branch"><b>"Timing"</b> → lead é re-classificado como "Adiou" e entra naquele fluxo</div><div class="timeline-branch"><b>"Já fechei com outro"</b> → registra concorrente · encerra retomada</div></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">30 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>2º e-mail · comparativo</div>
+          <div class="timeline-event-desc">Tabela honesta Sprout vs. 3 principais concorrentes. Útil pra defesa interna da escolha.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">45 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot wpp"></div></div>
+        <div class="timeline-card wpp">
+          <div class="timeline-event-title"><span class="timeline-tag wpp">WhatsApp</span>2ª mensagem do bot · nova âncora</div>
+          <div class="timeline-event-desc">"Trouxe um case da {empresa_similar} que pode te interessar..." — case selecionado pelo segmento.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">60 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>3º e-mail · calculadora de ROI</div>
+          <div class="timeline-event-desc">Ferramenta interativa que estima quanto o time pode economizar — argumento financeiro pro CFO.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">90 dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot combo"></div></div>
+        <div class="timeline-card combo">
+          <div class="timeline-event-title"><span class="timeline-tag combo">WhatsApp + E-mail</span>3ª mensagem + 4º e-mail · última pergunta</div>
+          <div class="timeline-event-desc">Bot pergunta se ainda faz sentido. Em paralelo, e-mail lista 3 atualizações recentes do produto.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">90+ dias</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot terminal"></div></div>
+        <div class="timeline-card terminal">
+          <div class="timeline-event-title">Sem resposta → lost definitivo</div>
+          <div class="timeline-event-desc">Lead encerra o ciclo de retomada. Vai para a base de nutrição longa via RD Station (e-mail trimestral).</div>
+          
+        </div>
+      </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 13: ADIOU -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag" style="color: var(--olive);">13 · Adiou o projeto</div>
+      <div class="section-num">xiii</div>
+    </div>
+
+    <div class="phase-card p3">
+      <div class="phase-head">
+        <div>
+          <div class="phase-tag" style="color: var(--olive);">24 leads perdidos · timing alinhado à promessa · meta de retomada 30%</div>
+          <div class="phase-title">Respeitar a data <em>prometida</em>.</div>
+          <div class="phase-subtitle">Lead pré-acordou o retorno. Mais reversível dos 3 motivos. Sucesso depende de respeitar o timing — tocar antes queima, tocar depois perde. Pré-requisito: closer preenche obrigatoriamente o campo "Data prometida de retomada" ao marcar o lead como perdido.</div>
+        </div>
+        <div class="phase-stats">
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quando ativa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Lead disse explicitamente que retoma em uma data futura</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Quem participa</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">Bot no WhatsApp + Closer original (Leo ou Débora)</div>
+          </div>
+          <div class="phase-stat">
+            <div class="phase-stat-label">Resultado esperado</div>
+            <div class="phase-stat-value" style="font-size: 13px; line-height: 1.4;">7-8 leads retomam dentro da data prometida</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <div class="panel-eyebrow" style="margin-bottom: 12px;">Como o lead é abordado · 4 mensagens ao redor da data prometida</div>
+      </div>
+
+            <div>
+        <div class="flow-tabs">
+          <button class="flow-tab active" data-variation="ad-v1">Versão 1 · padrão</button>
+          <button class="flow-tab" data-variation="ad-v2">Versão 2 · mais leve</button>
+          <button class="flow-tab" data-variation="ad-v3">Versão 3 · mais direta</button>
+        </div>
+
+        <div class="flow-variation active" data-variation="ad-v1">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias antes da data</div>
+    <div class="wpp-bubble">
+      Oi {nome}, lembra que em {data_lost} você falou de retomar o projeto Sprout em {mes_prometido}? Estamos chegando perto. Já quer marcar conversa ou prefere que eu toque mais perto?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Marcar agora</button>
+      <button class="wpp-btn">Toca mais perto</button>
+      <button class="wpp-btn">Adiei mais um pouco</button>
+    </div>
+    <div class="wpp-day-tag">3 dias antes · lembrete</div>
+    <div class="wpp-bubble">
+      Tô passando aqui pra avisar que daqui 3 dias é a data que combinamos retomar. Nesse meio tempo, lançamos {novidade_relevante} — pode te ajudar. Conversamos?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Quero conversar</button>
+      <button class="wpp-btn">Aguarda mais 1 semana</button>
+    </div>
+    <div class="wpp-day-tag">No dia · o momento</div>
+    <div class="wpp-bubble">
+      Hoje é o dia que combinamos! Como estão as coisas por aí? Vamos retomar?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Vamos retomar</button>
+      <button class="wpp-btn">Adiei mais um pouco</button>
+      <button class="wpp-btn">Cancelar projeto</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="ad-v2">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias antes</div>
+    <div class="wpp-bubble">
+      {nome}, você comentou que ia retomar em {mes_prometido} — estamos a 2 semanas. Tudo certo pra seguirmos? Posso já reservar um horário na sua agenda.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Reservar horário</button>
+      <button class="wpp-btn">Toca daqui 1 semana</button>
+      <button class="wpp-btn">Mudei de planos</button>
+    </div>
+    <div class="wpp-day-tag">3 dias antes</div>
+    <div class="wpp-bubble">
+      {nome}, faltam 3 dias pra nossa data. Aproveitando: a {empresa_similar} retomou recentemente conosco e teve resultado bem rápido. Acho que vale revisitar.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Vamos revisitar</button>
+      <button class="wpp-btn">Não é o momento</button>
+    </div>
+    <div class="wpp-day-tag">No dia</div>
+    <div class="wpp-bubble">
+      Oi {nome}, lá vem eu 🙂. Hoje é o dia. Tudo certo pra darmos andamento ou prefere puxar um pouco mais pra frente?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Vamos retomar</button>
+      <button class="wpp-btn">Puxar mais 2 semanas</button>
+      <button class="wpp-btn">Encerrar</button>
+    </div>
+  </div>
+</div>
+        </div>
+        <div class="flow-variation" data-variation="ad-v3">
+<div class="wpp-mockup">
+  <div class="wpp-header">
+    <div class="wpp-avatar">S</div>
+    <div class="wpp-header-info">
+      <div class="wpp-header-name">Spark Maxx</div>
+      <div class="wpp-header-status">online</div>
+    </div>
+  </div>
+  <div class="wpp-chat">
+    <div class="wpp-day-tag">14 dias antes</div>
+    <div class="wpp-bubble">
+      Oi {nome}, faltam 2 semanas pra data que combinamos retomar. Antes disso, queria saber se mudou algo no plano original — vamos pelo mesmo caminho ou tem ajuste?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Mesmo caminho</button>
+      <button class="wpp-btn">Tem ajuste, vamos conversar</button>
+    </div>
+    <div class="wpp-day-tag">3 dias antes</div>
+    <div class="wpp-bubble">
+      Passando pra lembrar que daqui 3 dias é o nosso check-in. Já te mando os horários disponíveis na semana que vem.
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Manda os horários</button>
+      <button class="wpp-btn">Adiei mais um pouco</button>
+    </div>
+    <div class="wpp-day-tag">No dia</div>
+    <div class="wpp-bubble">
+      {nome}, hoje é a data que você marcou pra retomarmos. Marco a conversa pra essa semana?
+      <div class="wpp-bubble-meta">14:32 <span class="check">✓✓</span></div>
+    </div>
+    <div class="wpp-buttons">
+      <button class="wpp-btn">Marca essa semana</button>
+      <button class="wpp-btn">Adiei mais</button>
+      <button class="wpp-btn">Cancelar projeto</button>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <div class="callout-special">
+        <div class="callout-special-label">Comportamentos especiais do fluxo</div>
+        <div class="callout-special-body">
+          <div><b>Se o lead diz "Vamos retomar"</b> → closer original recebe alerta imediato no Pipedrive · deal volta pra etapa de Solução com a proposta anterior anexada · pula reunião de qualificação (economiza dias)</div>
+          <div style="margin-top: 6px;"><b>Se adia uma 1ª vez</b> → bot pergunta a nova data, registra e reinicia o calendário automático</div>
+          <div style="margin-top: 6px;"><b>Se adia uma 2ª vez seguida</b> → sistema entende que não é prioridade real, re-classifica como "Sem maturidade" e direciona pra fluxo de nutrição de longo prazo</div>
+          <div style="margin-top: 6px;"><b>Se cancela</b> → deal vira lost definitivo e lead sai de qualquer fluxo de retomada futuro</div>
+        </div>
+      </div>
+
+      <div class="flow-section-header">
+        <div class="flow-section-title">Trilha de e-mails complementar</div>
+        <div class="flow-section-tag">4 e-mails ao redor da data prometida · clique nas abas pra navegar</div>
+      </div>
+      <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.6; margin-bottom: 20px; max-width: 700px;">Lead já pré-acordou retomada — trilha mantém ele preparado e aquecido até a data combinada. Foco em reduzir fricção da retomada (checklist), confirmar compromisso (reserva agenda) e adicionar valor (novidades) antes da conversa acontecer.</p>
+
+      <div class="email-trail">
+<div class="email-trail-nav" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:20px;width:100%;">
+  <button class="email-trail-tab active" data-email="e1">
+    <span class="email-trail-tab-num">E1</span>
+    <span class="email-trail-tab-when">30 dias antes da data</span>
+    <span class="email-trail-tab-title">Checklist</span>
+  </button>
+  <button class="email-trail-tab" data-email="e2">
+    <span class="email-trail-tab-num">E2</span>
+    <span class="email-trail-tab-when">14 dias antes</span>
+    <span class="email-trail-tab-title">Reserva agenda</span>
+  </button>
+  <button class="email-trail-tab" data-email="e3">
+    <span class="email-trail-tab-num">E3</span>
+    <span class="email-trail-tab-when">3 dias antes</span>
+    <span class="email-trail-tab-title">Novidades</span>
+  </button>
+  <button class="email-trail-tab" data-email="e4">
+    <span class="email-trail-tab-num">E4</span>
+    <span class="email-trail-tab-when">7 dias depois (se sem resposta)</span>
+    <span class="email-trail-tab-title">Resgate</span>
+  </button>
+</div>
+<div class="email-trail-pane active" data-email="e1">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 30 dias da data prometida</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Preparando a retomada do projeto Sprout — checklist</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Faltam 30 dias pra data que combinamos retomar o projeto Sprout. Pra deixar a retomada mais ágil quando chegarmos lá, montei um checklist rápido com 5 pontos pra você ter em mãos:</p><p style="margin-left: 16px;">→ Volume mensal estimado de campanhas<br>→ Time atual envolvido (interno/externo)<br>→ Ferramentas em uso hoje<br>→ Objetivos primários do projeto<br>→ Budget aprovado</p>
+      <a href="#" class="email-cta">Baixar checklist completo</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Ajuda o lead a chegar preparado na data prometida. Reduz a chance dele dizer "ainda não estou pronto" quando o momento chegar. Material útil que demonstra cuidado com a operação dele.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e2">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 14 dias da data prometida</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Faltam 2 semanas pra retomarmos · Sprout</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Faltam 2 semanas pra data que combinamos retomar o projeto Sprout. Queria já te dar dois caminhos:</p><p><b>1.</b> Se já estiver tudo certo aí, podemos reservar um horário na sua agenda agora.<br><b>2.</b> Se preferir, eu te procuro mais perto da data.</p><p>O que faz mais sentido pra você?</p>
+      <a href="#" class="email-cta">Reservar horário na agenda</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Lembrete formal com CTA pra já agendar. Agendar com antecedência aumenta drasticamente a chance de comparecimento vs. agendamento no último momento. Reforça o canal WhatsApp que ocorre em paralelo.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e3">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>Há 3 dias da data prometida</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">3 dias antes do nosso check-in · novidades Sprout</div>
+    </div>
+    <div class="email-body">
+      <p>Oi {nome},</p><p>Antes da nossa retomada, queria te contar 3 coisas que mudaram nos últimos meses e podem ser relevantes:</p><p style="margin-left: 16px;">→ <b>{novidade_1}</b> — pode impactar diretamente o ponto que conversamos sobre {tema}<br>→ <b>{novidade_2}</b> — case fresco da {empresa_similar} com resultado em 60 dias<br>→ <b>{novidade_3}</b> — atualização de pricing que pode caber melhor no seu cenário</p><p>Tudo isso pode mudar a conversa que vamos ter. Vai me confirmando aí.</p>
+      <a href="#" class="email-cta">Confirmar nosso horário</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Dar contexto fresco antes da conversa marcada — aumenta valor percebido da reunião e dá ao lead razões novas pra topar retomar. Combina lembrete + atualização sem ser pesado.</div>
+  </div>
+</div>
+<div class="email-trail-pane" data-email="e4">
+  <div class="email-mockup">
+    <div class="email-header">
+      <div class="email-meta-row"><span>Caixa de entrada</span><span>1 semana após data prometida</span></div>
+      <div class="email-from"><b>Spark Maxx</b><span>&lt;atendimento@sparkmaxx.com.br&gt;</span></div>
+      <div class="email-subject">Como está o projeto Sprout? Posso ajudar em algo?</div>
+    </div>
+    <div class="email-body">
+      <p>Olá {nome},</p><p>Imagino que a semana tá corrida — sem cobrar nada, só queria deixar essa porta aberta.</p><p>Se rolou algum impedimento pra retomarmos na data combinada, totalmente compreensível. Posso te procurar daqui 30 dias, ou se preferir, fica à vontade pra responder quando fizer sentido.</p>
+      <a href="#" class="email-cta">Reagendar pra daqui 30 dias</a>
+    </div>
+    <div class="email-footer">Spark Maxx · Esta é uma mensagem automatizada · Para parar de receber, responda "PARAR".</div>
+  </div>
+  <div class="email-trail-why">
+    <div class="email-trail-why-label">Por que enviar este e-mail</div>
+    <div class="email-trail-why-body">Último resgate respeitoso se o lead não retomou na data. Não cobrar, oferecer flexibilidade total. Se ele responder, volta pro fluxo; se não, vira nurture longo de baixa frequência.</div>
+  </div>
+</div>
+</div>
+
+      <div style="margin-top: 24px; padding: 20px 24px; background: var(--bg-paper); border: 1px solid var(--rule);">
+        <div class="panel-eyebrow" style="margin-bottom: 14px;">Como funciona, do início ao fim</div>
+        <div style="font-size: 13px; line-height: 1.7; display: grid; grid-template-columns: 32px 1fr; gap: 8px 16px;">
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--olive); font-size: 18px;">1</div>
+          <div><b style="font-weight: 500;">Closer registra a data prometida.</b> Ao marcar o lead como perdido por "Adiou", o closer preenche obrigatoriamente o campo "Data prometida de retomada" — essa é a âncora do fluxo.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--olive); font-size: 18px;">2</div>
+          <div><b style="font-weight: 500;">Sistema calcula o calendário automático.</b> A partir da data prometida, o bot agenda sozinho as 4 mensagens: 14 dias antes, 3 dias antes, no dia exato, e 7 dias depois.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--olive); font-size: 18px;">3</div>
+          <div><b style="font-weight: 500;">Bot mantém o lead aquecido.</b> Cada mensagem reforça que o compromisso foi do próprio lead — sem pressão, só lembrete amigável + atualização sobre novidades relevantes.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--olive); font-size: 18px;">4</div>
+          <div><b style="font-weight: 500;">Lead que retoma pula etapas.</b> Quando o lead clica "Vamos retomar", o deal volta direto pra etapa de Solução com a proposta anterior anexada — sem reunião de qualificação. Economiza dias do ciclo de venda.</div>
+          <div style="font-family: 'Fraunces', serif; font-style: italic; color: var(--olive); font-size: 18px;">5</div>
+          <div><b style="font-weight: 500;">Lead que adia de novo é re-classificado.</b> Se adiar uma segunda vez consecutiva, sistema entende que não é prioridade real e move para fluxo de nutrição longo — o closer não gasta tempo com leads que não vão fechar.</div>
+        </div>
+      </div>
+
+      <div class="timeline-flow">
+        <div class="timeline-flow-header">
+          <div class="timeline-flow-eyebrow">Fluxograma do motivo · linha do tempo completa</div>
+          <div class="timeline-flow-title">Linha do tempo do <em>Adiou o projeto</em></div>
+        </div>
+        <div class="timeline-track">
+      <div class="timeline-event">
+        <div class="timeline-when">Dia 0</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot start"></div></div>
+        <div class="timeline-card start">
+          <div class="timeline-event-title">Closer marca lost com data prometida</div>
+          <div class="timeline-event-desc">Closer registra data combinada de retomada no campo obrigatório. Sistema calcula o calendário automático a partir dessa data.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D-30</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>1º e-mail · checklist de preparação</div>
+          <div class="timeline-event-desc">Material que ajuda o lead a chegar pronto na data prometida (briefing, métricas, budget).</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D-14</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot combo"></div></div>
+        <div class="timeline-card combo">
+          <div class="timeline-event-title"><span class="timeline-tag combo">WhatsApp + E-mail</span>1ª mensagem do bot + 2º e-mail · reserva agenda</div>
+          <div class="timeline-event-desc">"Lembra que você falou de retomar em {mês}? Estamos chegando perto."</div>
+          <div class="timeline-branches"><div class="timeline-branch"><b>Se clica "Marcar agora"</b> → closer recebe alerta · deal pula reunião de qualificação e vai direto para Solução com proposta anexa</div></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D-3</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot combo"></div></div>
+        <div class="timeline-card combo">
+          <div class="timeline-event-title"><span class="timeline-tag combo">WhatsApp + E-mail</span>2ª mensagem + 3º e-mail · novidades</div>
+          <div class="timeline-event-desc">Lembrete com gancho — bot menciona feature nova. E-mail traz 3 atualizações relevantes.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D+0</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot wpp"></div></div>
+        <div class="timeline-card wpp">
+          <div class="timeline-event-title"><span class="timeline-tag wpp">WhatsApp</span>3ª mensagem do bot · o dia</div>
+          <div class="timeline-event-desc">"Hoje é o dia que combinamos! Vamos retomar?"</div>
+          <div class="timeline-branches"><div class="timeline-branch"><b>"Vamos retomar"</b> → closer assume · deal pula VQ · vai direto para Solução</div><div class="timeline-branch"><b>"Adiei mais um pouco" (1ª vez)</b> → bot pergunta nova data, registra e reinicia calendário</div><div class="timeline-branch"><b>"Adiei mais um pouco" (2ª vez seguida)</b> → re-classifica como "Sem maturidade" · vai para nurture longo</div><div class="timeline-branch"><b>"Cancelar projeto"</b> → lost definitivo · opt-out de retomadas futuras</div></div>
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D+7</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot email"></div></div>
+        <div class="timeline-card email">
+          <div class="timeline-event-title"><span class="timeline-tag email">E-mail</span>4º e-mail · resgate suave</div>
+          <div class="timeline-event-desc">"Como está o projeto? Posso ajudar em algo?" — última oportunidade respeitosa se o lead sumiu na data.</div>
+          
+        </div>
+      </div>
+      <div class="timeline-event">
+        <div class="timeline-when">D+7+</div>
+        <div class="timeline-dot-wrap"><div class="timeline-dot terminal"></div></div>
+        <div class="timeline-card terminal">
+          <div class="timeline-event-title">Sem resposta → nurture longo</div>
+          <div class="timeline-event-desc">Lead sai do fluxo ativo. Entra em nutrição via RD com toque a cada 60-90 dias para reabrir conversa quando o momento dele chegar.</div>
+          
+        </div>
+      </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 14: STACK + PENDÊNCIAS -->
+  <section>
+    <div class="section-head">
+      <div class="section-tag">14 · Stack</div>
+      <div class="section-num">xiv</div>
+    </div>
+    <h2 class="section-title">Encaixe na <em>stack atual</em>.</h2>
+    <p class="section-lede">Apenas ManyChat é adoção nova — todas as outras ferramentas já estão em uso e seguem padrões dos automatismos atuais.</p>
+
+    <div class="stack-map" style="margin-top: 28px;">
+      <div class="stack-tool">
+        <div class="stack-tool-name">Pipedrive</div>
+        <div class="stack-tool-role">Sistema de CRM onde os deals vivem. Recebe um novo fluxo dedicado a "Retomada" com 6 etapas, separadas do funil de vendas principal. Sem mudanças no que já existe — apenas adições.</div>
+        <span class="stack-tool-tag existing">já em uso</span>
+      </div>
+      <div class="stack-tool">
+        <div class="stack-tool-name">n8n</div>
+        <div class="stack-tool-role">Motor de automações que conecta tudo. Decide quando cada lead deve receber o próximo toque, dispara as mensagens no momento certo e move os leads entre etapas sem intervenção manual.</div>
+        <span class="stack-tool-tag existing">já em uso</span>
+      </div>
+      <div class="stack-tool">
+        <div class="stack-tool-name">ManyChat + WhatsApp</div>
+        <div class="stack-tool-role">Canal de conversa com o lead. Bot envia as mensagens automáticas e, quando o lead responde com intenção de retomar, transfere a conversa diretamente para o closer original — que assume o WhatsApp.</div>
+        <span class="stack-tool-tag new">em adoção</span>
+      </div>
+      <div class="stack-tool">
+        <div class="stack-tool-name">Pipedrive · Alertas</div>
+        <div class="stack-tool-role">Quando um lead responde positivamente ao bot, o closer responsável recebe uma notificação direto no Pipedrive (sino + atividade criada) com link pro deal e contexto da conversa anexado.</div>
+        <span class="stack-tool-tag existing">já em uso</span>
+      </div>
+      <div class="stack-tool">
+        <div class="stack-tool-name">Supabase</div>
+        <div class="stack-tool-role">Banco de dados que registra cada movimentação (lead entrou na fila, recebeu mensagem, respondeu, foi recuperado). Permite medir o desempenho do funil de retomada em tempo real.</div>
+        <span class="stack-tool-tag existing">já em uso</span>
+      </div>
+      <div class="stack-tool">
+        <div class="stack-tool-name">RD Station</div>
+        <div class="stack-tool-role">Recebe os leads que fecharam o ciclo de retomada sem sucesso, para entrar em nutrição de longo prazo via e-mail. Não toca leads que ainda estão em retomada ativa.</div>
+        <span class="stack-tool-tag existing">já em uso</span>
+      </div>
+    </div>
+
+  </section>
+
+
+
+    </div><!-- /tab-content plano -->
+
+    </div><!-- /content-area -->
+  </div><!-- /layout -->
+
+  <footer>
+    <div>
+      <div style="margin-bottom: 4px;"><b style="color: var(--ink);">Spark Maxx · Growth Ops</b></div>
+      <div>Dashboard gerado a partir de export Pipedrive (deals-13214741-2671.xlsx) · Parte I diagnóstico · Parte II plano de retomada</div>
+    </div>
+    <div class="stamp">
+      <div>v2.0 · 15.05.2026</div>
+      <div>n = 193 lost · 24 won · funil Sprout Social</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const COLORS = {
+  crimson: '#A8321F',
+  amber: '#B8722D',
+  olive: '#5C6B3F',
+  navy: '#1F3A5F',
+  plum: '#6B3651',
+  gray: '#A09D96',
+  ink: '#1A1814',
+  mute: '#6B6863'
+};
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = COLORS.mute;
+
+const dashboardCharts = [];
+
+// Motivos chart
+dashboardCharts.push(new Chart(document.getElementById('motivosChart'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'No-show', 'Ghosting (parou de responder)', 'Sem maturidade de mercado',
+      'Adiou o projeto', 'Busca outro tipo de serviço', 'Sem orçamento',
+      'Não faz campanha recorrente', 'Fechou com concorrente', 'Busca serviço Lab/NB',
+      'Decisor não aprovou', 'Lead duplicado', 'Outros (5 motivos)'
+    ],
+    datasets: [{
+      data: [29, 28, 24, 24, 19, 17, 11, 8, 8, 5, 5, 15],
+      backgroundColor: [
+        COLORS.amber, COLORS.crimson, COLORS.plum, COLORS.olive,
+        COLORS.crimson, COLORS.navy, COLORS.gray, COLORS.plum,
+        COLORS.gray, COLORS.gray, COLORS.gray, COLORS.gray
+      ],
+      borderWidth: 0,
+      barThickness: 22
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: COLORS.ink,
+        titleColor: '#FAF8F3',
+        bodyColor: '#FAF8F3',
+        padding: 10,
+        callbacks: {
+          label: (ctx) => `${ctx.parsed.x} deals · ${(ctx.parsed.x / 193 * 100).toFixed(1)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+        ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+      },
+      y: {
+        grid: { display: false, drawBorder: false },
+        ticks: { font: { size: 12 }, color: COLORS.ink }
+      }
+    }
+  }
+}));
+
+// Owners comparison
+dashboardCharts.push(new Chart(document.getElementById('ownersChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Ghosting', 'No-show', 'Adiou projeto', 'Sem maturidade', 'Busca outro', 'Sem orçamento'],
+    datasets: [
+      {
+        label: 'Débora Lima',
+        data: [5, 12, 10, 16, 16, 13],
+        backgroundColor: COLORS.navy,
+        borderWidth: 0,
+        barThickness: 18
+      },
+      {
+        label: 'Leo Moreno',
+        data: [23, 17, 14, 8, 1, 4],
+        backgroundColor: COLORS.crimson,
+        borderWidth: 0,
+        barThickness: 18
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        align: 'end',
+        labels: {
+          boxWidth: 12, boxHeight: 12, padding: 14,
+          font: { size: 12 }, color: COLORS.ink, usePointStyle: false
+        }
+      },
+      tooltip: {
+        backgroundColor: COLORS.ink,
+        titleColor: '#FAF8F3',
+        bodyColor: '#FAF8F3',
+        padding: 10
+      }
+    },
+    scales: {
+      x: { grid: { display: false, drawBorder: false }, ticks: { font: { size: 11 }, color: COLORS.ink } },
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false }, ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } } }
+    }
+  }
+}));
+
+// Mensal
+dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai (parc.)'],
+    datasets: [{
+      label: 'Lost',
+      data: [40, 57, 52, 34, 10],
+      borderColor: COLORS.crimson,
+      backgroundColor: 'rgba(168, 50, 31, 0.08)',
+      borderWidth: 2,
+      pointBackgroundColor: COLORS.crimson,
+      pointBorderColor: '#FAF8F3',
+      pointBorderWidth: 2,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+      tension: 0.25,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: COLORS.ink,
+        titleColor: '#FAF8F3',
+        bodyColor: '#FAF8F3',
+        padding: 10,
+        callbacks: { label: (ctx) => `${ctx.parsed.y} lost` }
+      }
+    },
+    scales: {
+      x: { grid: { display: false, drawBorder: false }, ticks: { font: { size: 12 }, color: COLORS.ink } },
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false }, ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } } }
+    }
+  }
+}));
+
+// === TAB SWITCHING ===
+(function() {
+  const buttons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-content');
+
+  function activate(target) {
+    buttons.forEach(b => {
+      const isActive = b.dataset.target === target;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    panels.forEach(p => {
+      p.classList.toggle('active', p.dataset.tab === target);
+    });
+    try { sessionStorage.setItem('dash-tab', target); } catch (e) {}
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => {
+      dashboardCharts.forEach(c => { try { c.resize(); } catch (e) {} });
+    });
+  }
+
+  buttons.forEach(b => {
+    b.addEventListener('click', () => activate(b.dataset.target));
+  });
+
+  let initial = 'diagnostico';
+  try {
+    const saved = sessionStorage.getItem('dash-tab');
+    if (saved === 'diagnostico' || saved === 'plano') initial = saved;
+  } catch (e) {}
+  if (initial !== 'diagnostico') activate(initial);
+})();
+
+// === THEME TOGGLE ===
+(function() {
+  const root = document.documentElement;
+  const opts = document.querySelectorAll('.theme-toggle-opt');
+
+  function setTheme(theme) {
+    if (theme === 'dark') root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    opts.forEach(o => o.classList.toggle('active', o.dataset.theme === theme));
+    try { localStorage.setItem('dash-theme', theme); } catch (e) {}
+    requestAnimationFrame(() => {
+      dashboardCharts.forEach(c => {
+        try {
+          // Update chart text/grid colors on theme change
+          const isDark = theme === 'dark';
+          const mute = isDark ? '#9B9690' : '#6B6863';
+          const ink = isDark ? '#F5F2EB' : '#1A1814';
+          c.options.scales.x.ticks.color = c.options.scales.x.ticks.color ? ink : ink;
+          c.options.scales.y.ticks.color = ink;
+          if (c.options.scales.x.grid) c.options.scales.x.grid.color = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+          if (c.options.scales.y.grid) c.options.scales.y.grid.color = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+          c.update();
+        } catch (e) {}
+      });
+    });
+  }
+
+  opts.forEach(o => {
+    o.addEventListener('click', () => setTheme(o.dataset.theme));
+  });
+
+  let initialTheme = 'light';
+  try {
+    const saved = localStorage.getItem('dash-theme');
+    if (saved === 'dark' || saved === 'light') initialTheme = saved;
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) initialTheme = 'dark';
+  } catch (e) {}
+  if (initialTheme !== 'light') setTheme(initialTheme);
+})();
+
+// === FLOW VARIATION TABS ===
+(function() {
+  document.querySelectorAll('.flow-tabs').forEach(tabGroup => {
+    const tabs = tabGroup.querySelectorAll('.flow-tab');
+    const container = tabGroup.parentElement;
+    const variations = container.querySelectorAll('.flow-variation');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.variation;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        variations.forEach(v => v.classList.toggle('active', v.dataset.variation === target));
+      });
+    });
+  });
+})();
+
+// === EMAIL TRAIL TABS ===
+(function() {
+  document.querySelectorAll('.email-trail-nav').forEach(nav => {
+    const tabs = nav.querySelectorAll('.email-trail-tab');
+    const container = nav.parentElement;
+    const panes = container.querySelectorAll('.email-trail-pane');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.email;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panes.forEach(p => p.classList.toggle('active', p.dataset.email === target));
+      });
+    });
+  });
+})();
+
+// === EDIT MODE (texto editável inline) ===
+(function() {
+  // Classes/tags cujo texto pode ser editado pelo usuário
+  const EDITABLE_CLASSES = [
+    'section-tag','section-num','section-title','section-lede',
+    'metric-label','metric-value','metric-foot',
+    'metric-mini-label','metric-mini-value','metric-mini-foot',
+    'eyebrow','panel-eyebrow','callout-eyebrow',
+    'action-title','action-body','action-meta',
+    'callout-special-label','callout-special-body',
+    'phase-tag','phase-title','phase-subtitle',
+    'phase-stat-label','phase-stat-value',
+    'philo-num','philo-title','philo-body',
+    'stack-tool-name','stack-tool-role','stack-tool-tag',
+    'email-subject','email-from','email-body','email-cta','email-footer',
+    'email-trail-tab-title','email-trail-tab-when',
+    'email-trail-why-label','email-trail-why-body',
+    'wpp-bubble','wpp-btn','wpp-day-tag','wpp-header-name','wpp-header-status',
+    'timeline-flow-eyebrow','timeline-flow-title',
+    'timeline-when','timeline-event-title','timeline-event-desc','timeline-tag','timeline-branch',
+    'flow-section-title','flow-section-tag',
+    'part-label','part-title','part-lede',
+    'funnel-label','funnel-pct',
+    'motivo-cell','vol','route-tag','route-flow','route-meta',
+    'stamp','section-num',
+    'hero','section-eyebrow',
+    'h1','h2','h3','h4','h5','p','em','strong','b','i'
+  ];
+  const EDITABLE_TAGS = ['H1','H2','H3','H4','H5','P','EM','STRONG','B','I','CODE','TD','TH','LI','BLOCKQUOTE','CAPTION','FIGCAPTION'];
+  const EXCLUDE_CLOSEST = '.tab-btn, .flow-tab, .email-trail-tab, .theme-toggle-opt, .edit-mode-btn, .edit-toolbar, script, canvas, style';
+
+  function isEditable(el) {
+    if (!el || el.nodeType !== 1) return false;
+    if (el.closest(EXCLUDE_CLOSEST)) return false;
+    const classMatch = EDITABLE_CLASSES.some(c => el.classList.contains(c));
+    const tagMatch = EDITABLE_TAGS.includes(el.tagName);
+    if (!classMatch && !tagMatch) return false;
+    // Tem texto direto?
+    const directText = Array.from(el.childNodes)
+      .filter(n => n.nodeType === 3)
+      .map(n => n.textContent.trim())
+      .join('');
+    return directText.length > 0;
+  }
+
+  function getAllEditable() {
+    return [...document.body.querySelectorAll('*')].filter(isEditable);
+  }
+
+  function assignIds() {
+    getAllEditable().forEach((el, idx) => {
+      if (!el.dataset.editId) el.dataset.editId = 'e' + idx;
+    });
+  }
+
+  // Restaurar edições salvas na carga
+  function restoreEdits() {
+    assignIds();
+    getAllEditable().forEach(el => {
+      try {
+        const saved = localStorage.getItem('dash-edit:' + el.dataset.editId);
+        if (saved !== null) el.innerHTML = saved;
+      } catch (e) {}
+    });
+  }
+
+  const listeners = new WeakMap();
+  function enableEdit() {
+    assignIds();
+    getAllEditable().forEach(el => {
+      el.contentEditable = 'true';
+      el.spellcheck = false;
+      if (!listeners.has(el)) {
+        const handler = () => {
+          try { localStorage.setItem('dash-edit:' + el.dataset.editId, el.innerHTML); }
+          catch (e) { console.error('save edit failed', e); }
+        };
+        el.addEventListener('input', handler);
+        listeners.set(el, handler);
+      }
+    });
+    document.body.classList.add('editing');
+  }
+
+  function disableEdit() {
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.contentEditable = 'false';
+    });
+    document.body.classList.remove('editing');
+  }
+
+  let editing = false;
+  function toggle() {
+    editing = !editing;
+    if (editing) enableEdit(); else disableEdit();
+  }
+
+  function exportHtml() {
+    const wasEditing = editing;
+    if (wasEditing) disableEdit();
+    try {
+      const clone = document.documentElement.cloneNode(true);
+      // Limpeza pra exportar arquivo limpo
+      clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+      clone.querySelectorAll('[data-edit-id]').forEach(el => el.removeAttribute('data-edit-id'));
+      clone.querySelectorAll('.edit-toolbar').forEach(el => el.remove());
+      clone.classList.remove('editing');
+      if (clone.querySelector('body')) clone.querySelector('body').classList.remove('editing');
+      // Canvases vão re-renderizar via JS - limpa pra reduzir tamanho
+      clone.querySelectorAll('canvas').forEach(c => {
+        const w = c.getAttribute('width') || c.width;
+        const h = c.getAttribute('height') || c.height;
+        const nc = document.createElement('canvas');
+        for (const a of c.attributes) nc.setAttribute(a.name, a.value);
+        c.replaceWith(nc);
+      });
+      const finalHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dashboard_sprout_editado_' + new Date().toISOString().slice(0,10) + '.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } finally {
+      if (wasEditing) enableEdit();
+    }
+  }
+
+  function resetAll() {
+    if (!confirm('Reverter todas as edições e voltar ao texto original? Esta ação não pode ser desfeita.')) return;
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('dash-edit:'))
+      .forEach(k => localStorage.removeItem(k));
+    location.reload();
+  }
+
+  // Wire up botões via data-edit-action
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-edit-action]');
+    if (!btn) return;
+    const action = btn.dataset.editAction;
+    if (action === 'toggle') toggle();
+    else if (action === 'export') exportHtml();
+    else if (action === 'reset') resetAll();
+    else if (action === 'exit' && editing) toggle();
+  });
+
+  // Restaurar edições na carga
+  restoreEdits();
+})();
+</script>
+
+  <!-- EDIT TOOLBAR (visível apenas em modo edição) -->
+  <div class="edit-toolbar" role="toolbar" aria-label="Ferramentas de edição">
+    <span class="edit-toolbar-status">Modo edição ativo</span>
+    <button class="edit-toolbar-btn primary" data-edit-action="export">⬇ Baixar HTML editado</button>
+    <button class="edit-toolbar-btn" data-edit-action="reset">↺ Reverter tudo</button>
+    <button class="edit-toolbar-btn" data-edit-action="exit">✕ Sair</button>
+  </div>
+
+</body>
+</html>
