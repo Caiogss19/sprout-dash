@@ -7,7 +7,17 @@ Dashboard estático single-file de análise de 193 deals lost (funil Sprout Soci
 Single-file HTML (~160 KB). Sem build step. Sem dependências de pacote.
 Dependências externas via CDN:
 - Chart.js 4 (gráficos)
+- Supabase JS 2 (sync de edições em tempo real)
 - Google Fonts: Fraunces, Inter, JetBrains Mono
+
+## Edições sincronizadas
+
+O modo edição persiste no Supabase (projeto `spark-maxx-rd-dashboard`,
+tabela `sprout_dash_edits`) e propaga via Realtime: qualquer pessoa com
+o link vê as alterações em tempo real. RLS permite leitura e escrita
+anônimas — `Reverter tudo` apaga as edições remotas e afeta todos os
+visitantes. Para trocar de projeto, edite `SUPABASE_URL` / `SUPABASE_KEY`
+no bloco `EDIT MODE` do `index.html`.
 
 ## Features
 
@@ -17,6 +27,7 @@ Dependências externas via CDN:
 - Trilha de 4 e-mails por motivo com explicação por trás de cada disparo
 - Fluxograma visual com linha do tempo e branches por motivo
 - Modo de edição inline: clica em qualquer texto, edita, baixa HTML editado
+- Sync de edições em tempo real entre todos os visitantes (Supabase Realtime)
 
 ## Deploy no Vercel
 

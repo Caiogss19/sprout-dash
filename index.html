@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg: #FAF8F3;
@@ -3559,8 +3560,41 @@ dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
   });
 })();
 
-// === EDIT MODE (texto editável inline) ===
+// === EDIT MODE (texto editável inline com sync em tempo real via Supabase) ===
 (function() {
+  // --- Supabase realtime config ---
+  const SUPABASE_URL = 'https://rximtawdguljuwiektgx.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_WEZ8VgOjZWKk92dcmYwvNA_WF-OpEfM';
+  const TABLE = 'sprout_dash_edits';
+  const CLIENT_ID = 'c_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  const DEBOUNCE_MS = 600;
+
+  let sb = null;
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+  } catch (e) { console.warn('Supabase init failed', e); }
+
+  const pendingTimers = new Map();
+  function scheduleRemoteSave(editId, html) {
+    if (!sb) return;
+    if (pendingTimers.has(editId)) clearTimeout(pendingTimers.get(editId));
+    const t = setTimeout(async () => {
+      pendingTimers.delete(editId);
+      try {
+        const { error } = await sb.from(TABLE).upsert({
+          edit_id: editId,
+          html: html,
+          updated_at: new Date().toISOString(),
+          client_id: CLIENT_ID,
+        }, { onConflict: 'edit_id' });
+        if (error) console.warn('upsert failed', error);
+      } catch (e) { console.warn('upsert error', e); }
+    }, DEBOUNCE_MS);
+    pendingTimers.set(editId, t);
+  }
+
   // Classes/tags cujo texto pode ser editado pelo usuário
   const EDITABLE_CLASSES = [
     'section-tag','section-num','section-title','section-lede',
@@ -3614,15 +3648,57 @@ dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
     });
   }
 
-  // Restaurar edições salvas na carga
-  function restoreEdits() {
+  // Restaurar edições salvas na carga (cache local + remoto)
+  async function restoreEdits() {
     assignIds();
+    // 1) cache local primeiro pra render instantâneo
     getAllEditable().forEach(el => {
       try {
         const saved = localStorage.getItem('dash-edit:' + el.dataset.editId);
         if (saved !== null) el.innerHTML = saved;
       } catch (e) {}
     });
+    // 2) busca remota e sobrescreve com a versão mais recente
+    if (!sb) return;
+    try {
+      const { data, error } = await sb.from(TABLE).select('edit_id, html');
+      if (error) { console.warn('initial fetch failed', error); return; }
+      if (!data) return;
+      const byId = new Map(data.map(r => [r.edit_id, r.html]));
+      document.querySelectorAll('[data-edit-id]').forEach(el => {
+        const remote = byId.get(el.dataset.editId);
+        if (remote != null && el.innerHTML !== remote) {
+          el.innerHTML = remote;
+          try { localStorage.setItem('dash-edit:' + el.dataset.editId, remote); } catch (e) {}
+        }
+      });
+    } catch (e) { console.warn('initial fetch error', e); }
+  }
+
+  // Aplica updates vindos do realtime (de outros clientes)
+  function applyRemoteUpdate(row) {
+    if (!row || !row.edit_id) return;
+    if (row.client_id === CLIENT_ID) return; // ignora eco do próprio cliente
+    const el = document.querySelector('[data-edit-id="' + CSS.escape(row.edit_id) + '"]');
+    if (!el) return;
+    if (document.activeElement === el) return; // não sobrescreve enquanto o usuário digita
+    if (el.innerHTML === row.html) return;
+    el.innerHTML = row.html;
+    try { localStorage.setItem('dash-edit:' + row.edit_id, row.html); } catch (e) {}
+  }
+
+  if (sb) {
+    sb.channel('sprout_dash_edits_rt')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: TABLE },
+        payload => {
+          if (payload.eventType === 'DELETE') {
+            // edit_id apagado: deixa o conteúdo como está (reset global recarrega a página)
+            return;
+          }
+          applyRemoteUpdate(payload.new);
+        })
+      .subscribe();
   }
 
   const listeners = new WeakMap();
@@ -3633,8 +3709,10 @@ dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
       el.spellcheck = false;
       if (!listeners.has(el)) {
         const handler = () => {
-          try { localStorage.setItem('dash-edit:' + el.dataset.editId, el.innerHTML); }
+          const html = el.innerHTML;
+          try { localStorage.setItem('dash-edit:' + el.dataset.editId, html); }
           catch (e) { console.error('save edit failed', e); }
+          scheduleRemoteSave(el.dataset.editId, html);
         };
         el.addEventListener('input', handler);
         listeners.set(el, handler);
@@ -3690,11 +3768,17 @@ dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
     }
   }
 
-  function resetAll() {
-    if (!confirm('Reverter todas as edições e voltar ao texto original? Esta ação não pode ser desfeita.')) return;
+  async function resetAll() {
+    if (!confirm('Reverter todas as edições e voltar ao texto original? Esta ação afeta TODOS os visitantes do link e não pode ser desfeita.')) return;
     Object.keys(localStorage)
       .filter(k => k.startsWith('dash-edit:'))
       .forEach(k => localStorage.removeItem(k));
+    if (sb) {
+      try {
+        const { error } = await sb.from(TABLE).delete().not('edit_id', 'is', null);
+        if (error) console.warn('remote reset failed', error);
+      } catch (e) { console.warn('remote reset error', e); }
+    }
     location.reload();
   }
 
