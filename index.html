@@ -1562,6 +1562,11 @@
           <span class="tab-btn-title">Plano de retomada</span>
           <span class="tab-btn-sub">Funil contínuo · sprints</span>
         </button>
+        <button class="tab-btn" data-target="contato" role="tab" aria-selected="false">
+          <span class="tab-btn-num">Parte III</span>
+          <span class="tab-btn-title">Qualificação &amp; 1º contato</span>
+          <span class="tab-btn-sub">Porta de entrada do funil</span>
+        </button>
       </nav>
       <div style="margin-top: 24px; padding: 0 16px;">
         <div class="theme-toggle" role="group" aria-label="Alternar tema">
@@ -3277,14 +3282,29 @@
 
   </section>
 
+    </div><!-- /tab-content plano -->
+
+    <div class="tab-content" data-tab="contato" role="tabpanel">
+
+  <!-- PART III HERO -->
+  <div class="hero">
+    <div class="hero-stamp"><span class="dot"></span>Parte III · Qualificação &amp; primeira tentativa de contato</div>
+    <div class="hero-grid">
+      <h1>A <em>porta de entrada</em> do funil.</h1>
+      <p class="hero-lede">
+        Antes de qualquer reunião — e antes dos 3 motivos de retomada da Parte II — o lead passa por duas etapas que hoje dependem do time e podem rodar no automático: o <b>bot de qualificação</b> e a <b>cadência de primeira tentativa de contato</b> do Lukas. As mesmas mensagens que já são enviadas na mão, agora plugadas nos bots.
+      </p>
+    </div>
+  </div>
+
   <!-- SECTION 15: QUALIFICAÇÃO & PRIMEIRA TENTATIVA DE CONTATO -->
   <section>
     <div class="section-head">
-      <div class="section-tag" style="color: var(--navy);">15 · Qualificação &amp; 1º contato</div>
-      <div class="section-num">xv</div>
+      <div class="section-tag" style="color: var(--navy);">01 · Qualificação &amp; 1º contato</div>
+      <div class="section-num">i</div>
     </div>
-    <h2 class="section-title">A porta de entrada do <em>funil</em>.</h2>
-    <p class="section-lede">Antes dos 3 motivos de retomada, o lead passa por duas etapas que hoje dependem do time e podem rodar no automático: o <b>bot de qualificação</b> (enriquece cargo, porte e budget) e a <b>cadência de primeira tentativa de contato</b> do Lukas. São as mesmas mensagens que ele já envia na mão — agora plugadas nos bots.</p>
+    <h2 class="section-title">Qualificação, depois <em>contato</em>.</h2>
+    <p class="section-lede">Dois fluxos em sequência: primeiro o bot enriquece o lead (cargo, porte e budget), depois entra a cadência de toques do SDR até o lead agendar ou responder. Abaixo, as mensagens exatas de cada um.</p>
 
     <!-- PHASE CARD A · BOT DE QUALIFICAÇÃO -->
     <div class="phase-card p4">
@@ -3561,9 +3581,7 @@
     </div>
   </section>
 
-
-
-    </div><!-- /tab-content plano -->
+    </div><!-- /tab-content contato -->
 
     </div><!-- /content-area -->
   </div><!-- /layout -->
@@ -3766,7 +3784,7 @@ dashboardCharts.push(new Chart(document.getElementById('mensalChart'), {
   let initial = 'diagnostico';
   try {
     const saved = sessionStorage.getItem('dash-tab');
-    if (saved === 'diagnostico' || saved === 'plano') initial = saved;
+    if (saved === 'diagnostico' || saved === 'plano' || saved === 'contato') initial = saved;
   } catch (e) {}
   if (initial !== 'diagnostico') activate(initial);
 })();
