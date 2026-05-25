@@ -1134,6 +1134,17 @@
   .phase-card.p3 { border-left-color: var(--olive); }
   .phase-card.p4 { border-left-color: var(--navy); }
   .phase-card.p5 { border-left-color: var(--plum); }
+  .lossmx-wrap { overflow-x: auto; margin-top: 8px; }
+  .lossmx { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .lossmx th, .lossmx td { border: 1px solid var(--rule); padding: 7px 9px; text-align: center; }
+  .lossmx thead th { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.7px; text-transform: uppercase; color: var(--ink-mute); background: var(--bg-soft); font-weight: 600; line-height: 1.3; }
+  .lossmx thead th .stg-tot { color: var(--ink-faint); font-weight: 500; }
+  .lossmx td.mtv, .lossmx th.mtv { text-align: left; font-weight: 500; white-space: nowrap; color: var(--ink); }
+  .lossmx .cell { font-family: 'JetBrains Mono', monospace; color: var(--ink); }
+  .lossmx .cell.zero { color: var(--ink-faint); font-weight: 400; }
+  .lossmx .tot { font-family: 'JetBrains Mono', monospace; font-weight: 700; background: var(--bg-soft); color: var(--ink); }
+  .lossmx tr.totrow th, .lossmx tr.totrow td { font-family: 'JetBrains Mono', monospace; font-weight: 700; background: var(--bg-soft); color: var(--ink); border-top: 2px solid var(--rule-strong); }
+  .lossmx .known::after { content: ' ●'; color: var(--crimson); font-size: 9px; vertical-align: 2px; }
   .phase-head {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -1706,6 +1717,38 @@
       <div class="callout-eyebrow">⚠ Gargalo identificado</div>
       <h3>A reunião VQ é o <em>buraco negro</em> do funil.</h3>
       <p>Dos 80 lost em Validação Qualificação, 29 simplesmente não compareceram (No-show) e 24 foram reprovados na hora por falta de maturidade. Isso significa que <b>66% dos lost neste stage poderiam ter sido evitados</b> com confirmação automática 24h antes e pré-qualificação mais dura no momento do agendamento.</p>
+    </div>
+
+    <div class="panel" style="margin-top: 32px;">
+      <div class="panel-head">
+        <div class="panel-title">Motivos de lost por etapa</div>
+        <div class="panel-eyebrow">matriz motivo × stage · n=193</div>
+      </div>
+      <p style="font-size:12px;color:var(--ink-mute);line-height:1.6;margin:0 0 14px;max-width:760px;">Linhas = motivos · colunas = etapas do funil. <b style="color:var(--ink)">Os totais (margens) são dados reais</b> do Pipedrive e as células com <span style="color:var(--crimson)">●</span> são confirmadas (No-show e Sem maturidade concentram-se em VQ). Os demais cruzamentos são <b style="color:var(--ink)">estimativa modelada</b> — ajuste com o export do Pipedrive ou pelo modo edição.</p>
+      <div class="lossmx-wrap">
+        <table class="lossmx">
+          <thead>
+            <tr><th class="mtv">Motivo</th><th>VQ<br><span class="stg-tot">80</span></th><th>SQL<br><span class="stg-tot">64</span></th><th>Sol.<br><span class="stg-tot">42</span></th><th>Fech.<br><span class="stg-tot">4</span></th><th>Neg.<br><span class="stg-tot">3</span></th><th class="tot">Total</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mtv">No-show</td><td class="cell known" style="background:rgba(168,50,31,0.69);color:#fff;">29</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">29</td></tr>
+            <tr><td class="mtv">Ghosting (parou de responder)</td><td class="cell zero">—</td><td class="cell" style="background:rgba(168,50,31,0.33);">10</td><td class="cell" style="background:rgba(168,50,31,0.48);color:#fff;">18</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">28</td></tr>
+            <tr><td class="mtv">Sem maturidade de mercado</td><td class="cell known" style="background:rgba(168,50,31,0.60);color:#fff;">24</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">24</td></tr>
+            <tr><td class="mtv">Adiou o projeto</td><td class="cell zero">—</td><td class="cell" style="background:rgba(168,50,31,0.41);color:#fff;">14</td><td class="cell" style="background:rgba(168,50,31,0.33);">10</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">24</td></tr>
+            <tr><td class="mtv">Busca outro tipo de serviço</td><td class="cell" style="background:rgba(168,50,31,0.31);">9</td><td class="cell" style="background:rgba(168,50,31,0.33);">10</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">19</td></tr>
+            <tr><td class="mtv">Sem orçamento</td><td class="cell" style="background:rgba(168,50,31,0.22);">4</td><td class="cell" style="background:rgba(168,50,31,0.33);">10</td><td class="cell" style="background:rgba(168,50,31,0.20);">3</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">17</td></tr>
+            <tr><td class="mtv">Não faz campanha recorrente</td><td class="cell" style="background:rgba(168,50,31,0.23);">5</td><td class="cell" style="background:rgba(168,50,31,0.25);">6</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">11</td></tr>
+            <tr><td class="mtv">Fechou com concorrente</td><td class="cell zero">—</td><td class="cell" style="background:rgba(168,50,31,0.22);">4</td><td class="cell" style="background:rgba(168,50,31,0.18);">2</td><td class="cell" style="background:rgba(168,50,31,0.16);">1</td><td class="cell" style="background:rgba(168,50,31,0.16);">1</td><td class="tot">8</td></tr>
+            <tr><td class="mtv">Busca serviço Lab/NB</td><td class="cell" style="background:rgba(168,50,31,0.22);">4</td><td class="cell" style="background:rgba(168,50,31,0.22);">4</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">8</td></tr>
+            <tr><td class="mtv">Decisor não aprovou</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell" style="background:rgba(168,50,31,0.18);">2</td><td class="cell" style="background:rgba(168,50,31,0.18);">2</td><td class="cell" style="background:rgba(168,50,31,0.16);">1</td><td class="tot">5</td></tr>
+            <tr><td class="mtv">Lead duplicado</td><td class="cell" style="background:rgba(168,50,31,0.23);">5</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="cell zero">—</td><td class="tot">5</td></tr>
+            <tr><td class="mtv">Outros (5 motivos)</td><td class="cell zero">—</td><td class="cell" style="background:rgba(168,50,31,0.25);">6</td><td class="cell" style="background:rgba(168,50,31,0.27);">7</td><td class="cell" style="background:rgba(168,50,31,0.16);">1</td><td class="cell" style="background:rgba(168,50,31,0.16);">1</td><td class="tot">15</td></tr>
+          </tbody>
+          <tfoot>
+            <tr class="totrow"><th class="mtv">Total</th><td>80</td><td>64</td><td>42</td><td>4</td><td>3</td><td>193</td></tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </section>
 
