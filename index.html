@@ -3722,6 +3722,42 @@
     <div class="section-head"><div class="section-tag">ii · Onde e por quê</div><div class="section-num">ii</div></div>
     <h2 class="section-title">Onde o SDR <em>perde</em>.</h2>
     <p class="section-lede">A maior parte das perdas acontece cedo — Conexão (38%) e Prospecção (34%) somam 72% do lost. O motivo dominante é <b>"Não consegui qualificar / follow-up esgotado"</b> (32%): leads que o SDR simplesmente não conseguiu engajar a tempo. Somado a <b>dados de contato incorretos</b> (12%), aponta para um problema de cadência e de qualidade da base, não de pitch.</p>
+
+    <div class="panel" style="margin-top: 32px;">
+      <div class="panel-head">
+        <div class="panel-title">Funil de conversão · Prospecção → Ganho</div>
+        <div class="panel-eyebrow">1.081 deals no período</div>
+      </div>
+      <p style="font-size:12px;color:var(--ink-mute);line-height:1.6;margin:0 0 8px;max-width:760px;">Quantos dos 1.081 deals (818 lost + 263 qualificados) alcançaram cada etapa da pré-venda, e a conversão entre elas. A maior queda é <b style="color:var(--ink)">Conexão → MQL</b> (só 61% avançam). Da prospecção ao handoff, <b style="color:var(--ink)">24,3%</b>.</p>
+      <div class="cfunnel">
+        <div class="cfunnel-row">
+          <div class="cfunnel-stage">Prospecção</div>
+          <div class="cfunnel-barwrap"><div class="cfunnel-bar" style="width:100%;background:var(--crimson);">1.081</div></div>
+          <div class="cfunnel-conv">entrada do funil</div>
+        </div>
+        <div class="cfunnel-row">
+          <div class="cfunnel-stage">Conexão</div>
+          <div class="cfunnel-barwrap"><div class="cfunnel-bar" style="width:74%;background:var(--amber);">805</div></div>
+          <div class="cfunnel-conv"><b>74,5%</b> da Prospecção</div>
+        </div>
+        <div class="cfunnel-row">
+          <div class="cfunnel-stage">MQL</div>
+          <div class="cfunnel-barwrap"><div class="cfunnel-bar" style="width:46%;background:var(--plum);">492</div></div>
+          <div class="cfunnel-conv"><b>61,1%</b> da Conexão</div>
+        </div>
+        <div class="cfunnel-row">
+          <div class="cfunnel-stage">Qualificação</div>
+          <div class="cfunnel-barwrap"><div class="cfunnel-bar" style="width:35%;background:var(--navy);">373</div></div>
+          <div class="cfunnel-conv"><b>75,8%</b> do MQL</div>
+        </div>
+        <div class="cfunnel-row">
+          <div class="cfunnel-stage">Ganho<small>handoff</small></div>
+          <div class="cfunnel-barwrap"><div class="cfunnel-bar" style="width:24%;background:var(--olive);">263</div></div>
+          <div class="cfunnel-conv win"><b>24,3%</b> · qualificados</div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid-asym" style="margin-top: 32px;">
       <div class="panel">
         <div class="panel-head"><div class="panel-title">Lost por etapa do funil</div><div class="panel-eyebrow">% sobre 818</div></div>
@@ -3809,6 +3845,23 @@
         </div>
       </div>
     </div>
+    <div class="grid-3" style="margin-top: 24px;">
+      <div class="metric-mini">
+        <div class="metric-mini-label">Fup esgotado</div>
+        <div class="metric-mini-value">262</div>
+        <div class="metric-mini-foot">32,0% · 79% em Prospecção · ciclo 29d</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Ghosting</div>
+        <div class="metric-mini-value">68</div>
+        <div class="metric-mini-foot">8,3% · 85% em Conexão · ciclo 28d</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Dados incorretos + Lead não-MQL</div>
+        <div class="metric-mini-value">139</div>
+        <div class="metric-mini-foot">17,0% · problema de base/triagem</div>
+      </div>
+    </div>
     <div class="callout" style="margin-top: 24px;">
       <div class="callout-eyebrow">⚠ Gargalo identificado</div>
       <h3>1 em cada 3 lost é <em>follow-up esgotado</em>.</h3>
@@ -3858,7 +3911,8 @@
     <div class="section-head"><div class="section-tag">iv · Tempo &amp; cruzamento</div><div class="section-num">iv</div></div>
     <h2 class="section-title">Pico de março e o mapa <em>motivo × etapa</em>.</h2>
     <p class="section-lede">Março concentrou 321 lost — quase o triplo de janeiro. Provável reflexo de um lote grande de inbound que entrou e não foi trabalhado a tempo (consistente com o volume de "follow-up esgotado"). A matriz abaixo mostra exatamente em que etapa cada motivo mata o lead.</p>
-    <div class="panel" style="margin-top: 32px;">
+    <div class="grid-asym" style="margin-top: 32px;">
+      <div class="panel">
       <div class="panel-head"><div class="panel-title">Lost por mês</div><div class="panel-eyebrow">2026 · mai parcial</div></div>
       <div class="funnel">
         <div class="funnel-row">
@@ -3887,6 +3941,24 @@
           <div class="funnel-pct">14%</div>
         </div>
       </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Ciclo até perda por motivo</div><div class="panel-eyebrow">dias médios</div></div>
+        <table class="table">
+          <thead><tr><th>Motivo</th><th class="num">Ciclo (d)</th></tr></thead>
+          <tbody>
+            <tr><td>Fup esgotado</td><td class="num">29</td></tr>
+            <tr><td>Ghosting</td><td class="num">28</td></tr>
+            <tr><td>Decisor não aprovou</td><td class="num">19</td></tr>
+            <tr><td>Sem maturidade</td><td class="num">11</td></tr>
+            <tr><td>Sem orçamento</td><td class="num">10</td></tr>
+            <tr><td>Busca outro serviço</td><td class="num">8</td></tr>
+            <tr><td>Lead duplicado</td><td class="num">7</td></tr>
+            <tr><td>Dados incorretos</td><td class="num">6</td></tr>
+            <tr><td>Lead não é MQL</td><td class="num">2</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="panel" style="margin-top: 32px;">
       <div class="panel-head"><div class="panel-title">Motivos de lost por etapa</div><div class="panel-eyebrow">matriz motivo × stage · n=818</div></div>
@@ -3914,6 +3986,142 @@
           </tfoot>
         </table>
       </div>
+    </div>
+  </section>
+
+  <!-- CASOS REPRESENTATIVOS SDR -->
+  <section>
+    <div class="section-head"><div class="section-tag">v · Casos representativos</div><div class="section-num">v</div></div>
+    <h2 class="section-title">Amostras por <em>motivo</em>.</h2>
+    <p class="section-lede">Empresas representativas dos 5 principais motivos de perda na pré-venda. A coluna de ciclo mostra quanto tempo o SDR investiu antes de marcar lost — note que "Fup esgotado" e "Ghosting" têm ciclos longos (28–29 dias), enquanto "Dados incorretos" e "Lead não é MQL" morrem em poucos dias.</p>
+
+    <div class="amostras" style="margin-top: 36px;">
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">01</div>
+          <h3>Fup esgotado<br>(não qualificou)</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">262 deals · 32,0%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">Prospecção · 79%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">29 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">nunca respondeu</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th>SDR</th><th class="num">Ciclo</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Aura Beauty (outbound)</td><td>Deborah Á.</td><td class="num">56d</td><td class="num">06/03</td><td><span class="badge cool">LEMLIST</span></td></tr>
+              <tr><td>Moove Comunicação</td><td>Deborah Á.</td><td class="num">52d</td><td class="num">09/03</td><td>—</td></tr>
+              <tr><td>Smallpdf</td><td>Lukas</td><td class="num">52d</td><td class="num">02/03</td><td><span class="badge cool">inbound</span></td></tr>
+              <tr><td>Fitios Foods Brasil</td><td>Deborah Á.</td><td class="num">51d</td><td class="num">09/03</td><td>—</td></tr>
+              <tr><td>Menopausou</td><td>Deborah Á.</td><td class="num">51d</td><td class="num">06/03</td><td><span class="badge cool">Recorrente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">02</div>
+          <h3>Sem maturidade<br>de mercado</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">131 deals · 16,0%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">Conexão · 60%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">11 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">mismatch de ICP</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th>SDR</th><th class="num">Ciclo</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Collum</td><td>Lukas</td><td class="num">53d</td><td class="num">12/03</td><td><span class="badge cool">Recorrente</span></td></tr>
+              <tr><td>Agência Hakam</td><td>Lukas</td><td class="num">40d</td><td class="num">18/03</td><td>—</td></tr>
+              <tr><td>Cabana Burger</td><td>Lukas</td><td class="num">39d</td><td class="num">09/03</td><td>—</td></tr>
+              <tr><td>Cazehn</td><td>Lukas</td><td class="num">38d</td><td class="num">16/03</td><td>—</td></tr>
+              <tr><td>Blunt</td><td>Deborah Á.</td><td class="num">37d</td><td class="num">06/03</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">03</div>
+          <h3>Dados de contato<br>incorretos</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">97 deals · 11,9%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">MQL · 51%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">6 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">qualidade da base</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th>SDR</th><th class="num">Ciclo</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Marta Campos</td><td>Deborah Á.</td><td class="num">35d</td><td class="num">26/02</td><td>—</td></tr>
+              <tr><td>Açaí da Barra</td><td>Deborah Á.</td><td class="num">35d</td><td class="num">19/02</td><td>—</td></tr>
+              <tr><td>Peixaria Marisca</td><td>Deborah Á.</td><td class="num">29d</td><td class="num">06/03</td><td>—</td></tr>
+              <tr><td>Espaço Terapêutico Zaya</td><td>Lukas</td><td class="num">27d</td><td class="num">05/05</td><td>—</td></tr>
+              <tr><td>Japalash</td><td>Lukas</td><td class="num">21d</td><td class="num">13/05</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">04</div>
+          <h3>Busca outro tipo<br>de serviço</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">77 deals · 9,4%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">Conexão · 64%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">8 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">mismatch de ICP</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th>SDR</th><th class="num">Ciclo</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Mega Mídia OOH</td><td>Deborah Á.</td><td class="num">40d</td><td class="num">09/03</td><td>—</td></tr>
+              <tr><td>AdxStars</td><td>Lukas</td><td class="num">33d</td><td class="num">04/03</td><td>—</td></tr>
+              <tr><td>Globo (ViU)</td><td>Lukas</td><td class="num">30d</td><td class="num">06/03</td><td>—</td></tr>
+              <tr><td>una mais seguros</td><td>Lukas</td><td class="num">27d</td><td class="num">14/01</td><td>—</td></tr>
+              <tr><td>Grupo Base</td><td>Lukas</td><td class="num">25d</td><td class="num">11/05</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="amostra">
+        <div class="amostra-head">
+          <div class="num">05</div>
+          <h3>Ghosting<br>(parou de responder)</h3>
+          <div class="amostra-stats">
+            <div class="amostra-stat"><span class="amostra-stat-label">Volume</span><span class="amostra-stat-value">68 deals · 8,3%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Stage modal</span><span class="amostra-stat-value">Conexão · 85%</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Ciclo médio</span><span class="amostra-stat-value">28 dias</span></div>
+            <div class="amostra-stat"><span class="amostra-stat-label">Padrão</span><span class="amostra-stat-value">sumiço pós-conexão</span></div>
+          </div>
+        </div>
+        <div>
+          <table class="table">
+            <thead><tr><th>Empresa</th><th>SDR</th><th class="num">Ciclo</th><th class="num">Lost em</th><th>Tag</th></tr></thead>
+            <tbody>
+              <tr><td>Guardians of Humanity</td><td>Lukas</td><td class="num">59d</td><td class="num">09/03</td><td><span class="badge cool">inbound</span></td></tr>
+              <tr><td>Colégio Sigma</td><td>Lukas</td><td class="num">56d</td><td class="num">14/01</td><td><span class="badge cool">Recorrente</span></td></tr>
+              <tr><td>Positivo Bra</td><td>Lukas</td><td class="num">55d</td><td class="num">02/02</td><td><span class="badge cool">Recorrente</span></td></tr>
+              <tr><td>XPER Tecnologia</td><td>Lukas</td><td class="num">53d</td><td class="num">09/03</td><td>—</td></tr>
+              <tr><td>Carpe Branding</td><td>Lukas</td><td class="num">51d</td><td class="num">11/03</td><td><span class="badge cool">Recorrente</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </section>
 
